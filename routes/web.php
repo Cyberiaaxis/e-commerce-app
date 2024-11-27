@@ -80,7 +80,7 @@ Route::middleware(['auth'])->group(
             // Route::patch('products/{id}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggleStatus');
         });
         Route::get('/assignrole', [RoleController::class, 'assignRoleShow'])->name('admin.assignrole');
-        Route::post('/assignroletouser/{user}', [RoleController::class, 'assignRole'])->name('admin.assignroletouser');
+        Route::post('/assignroletouser', [RoleController::class, 'assignRole'])->name('admin.assignroletouser');
         Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     }
 );
