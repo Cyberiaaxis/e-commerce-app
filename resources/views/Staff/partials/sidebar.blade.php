@@ -51,13 +51,18 @@
                 <div class="p-2">
                     <ul class="nav flex-column">
                         <li class="nav-item">
+                            <a href="{{ route('admin.permissions.index') }}" class="nav-link" id="permissionsLink" onclick="toggleActiveLink(event)">
+                                <i class="fas fa-key me-2"></i>Permissions
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ route('admin.roles.index') }}" class="nav-link" id="rolesLink" onclick="toggleActiveLink(event)">
                                 <i class="fas fa-user-tag me-2"></i>Roles
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('admin.permissions.index') }}" class="nav-link" id="permissionsLink" onclick="toggleActiveLink(event)">
-                                <i class="fas fa-key me-2"></i>Permissions
+                            <a href="{{ route('admin.assignrole') }}" class="nav-link" id="permissionsLink" onclick="toggleActiveLink(event)">
+                                <i class="fas fa-key me-2"></i>Assign Role
                             </a>
                         </li>
                     </ul>

@@ -72,7 +72,6 @@
                     <label for="priority" class="form-label">Priority</label>
                     <select id="priority" name="priority" class="form-select" required>
                         <option value="low" {{ $ticket->priority == 'low' ? 'selected' : '' }}>Low</option>
-                        <option value="medium" {{ $ticket->priority == 'medium' ? 'selected' : '' }}>Medium</option>
                         <option value="high" {{ $ticket->priority == 'high' ? 'selected' : '' }}>High</option>
                     </select>
                 </div>
@@ -89,7 +88,6 @@
                         @endforeach
                     </select>
                 </div>
-
                 <div class="d-flex justify-content-between">
                     <a href="{{ route('admin.tickets.index') }}" class="btn btn-secondary">Back to Tickets</a>
                     <button type="submit" class="btn btn-success">Update Ticket</button>

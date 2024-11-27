@@ -4,10 +4,15 @@
 
 @section('content')
 <div class="container py-4">
-    <!-- Section Header -->
-    <div class="text-center mb-4">
-        <h2 class="text-primary">Ticket Trace</h2>
-        <p class="lead">Manage and track your support tickets with ease.</p>
+    <!-- Section Header with Raise Ticket Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-primary">Ticket Trace</h2>
+            <p class="lead">Manage and track your support tickets with ease.</p>
+        </div>
+        <a href="{{ route('admin.tickets.create') }}" class="btn btn-outline-success w-100">
+            <i class="fas fa-plus-circle"></i> Raise Ticket
+        </a>
     </div>
 
     <div class="row">
@@ -64,11 +69,9 @@
                     </div>
 
                     <!-- Edit button for open tickets -->
-                    @if($ticket->status == 'open')
                     <div class="mt-3">
                         <a href="{{ route('admin.tickets.edit', $ticket->id) }}" class="btn btn-primary btn-sm">Edit Ticket</a>
                     </div>
-                    @endif
                 </div>
                 <!-- End of Card Body -->
             </div>
@@ -81,5 +84,4 @@
     <div class="alert alert-warning text-center">No tickets available.</div>
     @endif
 </div>
-
 @endsection

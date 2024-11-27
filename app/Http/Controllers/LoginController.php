@@ -35,7 +35,7 @@ class LoginController extends Controller
             // If successful, redirect to the intended location
             return redirect()->intended($this->redirectTo);
         }
-        dd(auth()->user());
+
         // If unsuccessful, redirect back to the login form with an error
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
