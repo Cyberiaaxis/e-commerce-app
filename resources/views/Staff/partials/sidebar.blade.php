@@ -6,17 +6,12 @@
     </div>
     <ul class="nav nav-pills flex-column mb-auto">
         <li>
-            <a href="{{ route('admin.products.index') }}" class="nav-link active" onclick="toggleActiveLink(event)">
+            <a href="{{ route('admin.dashboard.index') }}" class="nav-link active" onclick="toggleActiveLink(event)">
                 <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
                 <span class="text">Dashboard</span>
             </a>
         </li>
-        <li>
-            <a href="#" class="nav-link" onclick="toggleActiveLink(event)">
-                <span class="icon"><i class="fas fa-box-open"></i></span>
-                <span class="text">Orders</span>
-            </a>
-        </li>
+
         <li class="nav-item dropdown">
             <a href="#" class="nav-link" id="productsDropdown" role="button" data-bs-toggle="collapse" data-bs-target="#productSubmenu" aria-expanded="false" onclick="toggleActiveLink(event)">
                 <span class="icon"><i class="fas fa-th-large"></i></span>
@@ -60,14 +55,15 @@
                                 <i class="fas fa-user-tag me-2"></i>Roles
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.assignrole') }}" class="nav-link" id="permissionsLink" onclick="toggleActiveLink(event)">
-                                <i class="fas fa-key me-2"></i>Assign Role
-                            </a>
-                        </li>
+
                     </ul>
                 </div>
             </div>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.assignRole.index') }}" class="nav-link" id="permissionsLink" onclick="toggleActiveLink(event)">
+                <i class="fas fa-key me-2"></i>Assign Role
+            </a>
         </li>
         <li>
             <a href="{{ route('admin.tickets.index') }}" class="nav-link" onclick="toggleActiveLink(event)">

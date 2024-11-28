@@ -136,33 +136,11 @@ class RoleController extends Controller
      */
     public function assignRoleShow()
     {
-        $users = User::all();
-        $roles = Role::all();
-        return view('Staff.pages.roles.userroles', compact(['users', 'roles']));
+        dd("heelo");
+        // $users = User::all();
+        // $roles = Role::all();
+        // return view('Staff.pages.userRoles.index', compact(['users', 'roles']));
     }
-
-    /**
-     * Assign a role to a user.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function assignRole(Request $request,)
-    {
-        // dd($request);
-        // Validate the request
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'roles' => 'required|array', // Ensure roles is an array
-            'roles.*' => 'exists:roles,name', // Ensure each role exists in the roles table
-        ]);
-        // Fetch the user by user_id
-        $user = User::findOrFail($request->user_id);
-        $user->syncRoles($request->roles);
-        return redirect()->route('admin.roles.index')->with('success', 'Roles assigned successfully.');
-    }
-
 
     /**
      * Attach a permission to a role.

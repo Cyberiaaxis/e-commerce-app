@@ -1,60 +1,46 @@
 <?php
 
-// app/Http/Controllers/OrderController.php
-
 namespace App\Http\Controllers;
 
 use App\Models\Order;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Auth;
 
 class OrderController extends Controller
 {
-    // Show all orders for a user
     public function index()
     {
-        $orders = Auth::user()->orders;  // Get orders for the logged-in user
-        return view('order.index', compact('orders'));
+        // Get orders with pagination
+        $orders = Order::paginate(10); // Adjust as needed
+
+        return view('order-management', compact('orders'));
     }
 
-    // Show order details
-    public function show($id)
+    public function updateStatus($orderId)
     {
-        $order = Order::findOrFail($id);
-        return view('orders.show', compact('order'));
-    }
+        $order = Order::findOrFail($orderId);
 
-    // Create a new order (for simplicity, assume it's a manual process)
-    public function create()
-    {
-        return view('orders.create');
-    }
+        if ($order->status == 'Pending') {
+            $order->status = 'Shipped';
+        } elseif ($order->status == 'Shipped') {
+            $order->status = 'Delivered';
+        }
 
-    // Store the new order in the database
-    public function store(Request $request)
-    {
-        $request->validate([
-            'total_price' => 'required|numeric',
-            'status' => 'required|in:pending,completed,cancelled',
-        ]);
-
-        $order = new Order();
-        $order->user_id = Auth::id(); // Associate with the logged-in user
-        $order->total_price = $request->total_price;
-        $order->status = $request->status;
         $order->save();
 
-        return redirect()->route('orders.index')->with('success', 'Order placed successfully');
+        return redirect()->route('orders.index')->with('success', 'Order status updated!');
     }
 
-    // Update order status
-    public function update(Request $request, $id)
+    public function refundCancel($orderId)
     {
-        $order = Order::findOrFail($id);
-        $order->status = $request->status;
+        $order = Order::findOrFail($orderId);
+
+        if ($order->status != 'Cancelled') {
+            $order->status = 'Cancelled';
+            // Process the refund logic if needed
+        }
+
         $order->save();
 
-        return redirect()->route('orders.show', $order->id)->with('success', 'Order status updated');
+        return redirect()->route('orders.index')->with('success', 'Order refunded and cancelled!');
     }
 }

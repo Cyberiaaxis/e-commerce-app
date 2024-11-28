@@ -18,7 +18,7 @@
     </div>
     @endif
 
-    <form action="{{ route('admin.assignroletouser') }}" method="POST">
+    <form action="{{ route('admin.assignRole.store') }}" method="POST">
         @csrf
         <div class="form-group mb-3">
             <label for="user_id">Select User</label>

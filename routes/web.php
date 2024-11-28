@@ -13,7 +13,9 @@ use App\Http\Controllers\{
     OrderController,
     RoleController,
     PermissionController,
-    TicketController
+    TicketController,
+    AssignRoleController,
+    SidebarController
 };
 
 /*
@@ -65,8 +67,8 @@ Route::middleware(['auth'])->group(
         // Admin-Only Routes for Roles & Permissions
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/dashboard', function () {
-                return view('Staff.pages.dashboard');
-            })->name('dashboard');
+                return view('Staff.pages.dashboard.index');
+            })->name('dashboard.index');
 
             Route::resource('roles', RoleController::class);
             Route::resource('permissions', PermissionController::class);
@@ -78,9 +80,14 @@ Route::middleware(['auth'])->group(
             Route::post('/roles/{role}/assign-permission', [RoleController::class, 'assignPermission'])
                 ->name('roles.assign-permission');
             // Route::patch('products/{id}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggleStatus');
+            Route::resource('assignRole', AssignRoleController::class);
         });
-        Route::get('/assignrole', [RoleController::class, 'assignRoleShow'])->name('admin.assignrole');
-        Route::post('/assignroletouser', [RoleController::class, 'assignRole'])->name('admin.assignroletouser');
+
+        Route::resource('orders', OrderController::class);
+        Route::put('orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+        Route::put('orders/{order}/refund-cancel', [OrderController::class, 'refundCancel'])->name('orders.refundCancel');
+        // Route::get('/assignRole', [RoleController::class, 'assignRoleShow'])->name('admin.assignRole');
+        // Route::post('/assignroletouser', [RoleController::class, 'assignRole'])->name('admin.assignroletouser');
         Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     }
 );
