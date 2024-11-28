@@ -5,13 +5,18 @@
         </span>
     </div>
     <ul class="nav nav-pills flex-column mb-auto">
-        <li>
+        <li class="nav-item">
             <a href="{{ route('admin.dashboard.index') }}" class="nav-link active" onclick="toggleActiveLink(event)">
                 <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
                 <span class="text">Dashboard</span>
             </a>
         </li>
-
+        <li class="nav-item">
+            <a href="{{ route('orders.index') }}" class="nav-link active" onclick="toggleActiveLink(event)">
+                <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
+                <span class="text">Orders Management</span>
+            </a>
+        </li>
         <li class="nav-item dropdown">
             <a href="#" class="nav-link" id="productsDropdown" role="button" data-bs-toggle="collapse" data-bs-target="#productSubmenu" aria-expanded="false" onclick="toggleActiveLink(event)">
                 <span class="icon"><i class="fas fa-th-large"></i></span>

@@ -84,8 +84,9 @@ Route::middleware(['auth'])->group(
         });
 
         Route::resource('orders', OrderController::class);
-        Route::put('orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
-        Route::put('orders/{order}/refund-cancel', [OrderController::class, 'refundCancel'])->name('orders.refundCancel');
+        Route::get('/stats', [OrderController::class, 'stats'])->name('orders.stats');
+        // Route::put('orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+        // Route::put('orders/{order}/refund-cancel', [OrderController::class, 'refundCancel'])->name('orders.refundCancel');
         // Route::get('/assignRole', [RoleController::class, 'assignRoleShow'])->name('admin.assignRole');
         // Route::post('/assignroletouser', [RoleController::class, 'assignRole'])->name('admin.assignroletouser');
         Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
