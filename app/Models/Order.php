@@ -9,13 +9,32 @@ class Order extends Model
 {
     use HasFactory;
 
+    // Table name if not the plural form of the model name
+    protected $table = 'orders';
+
+    // Columns that are mass assignable
     protected $fillable = [
-        'order_number',
+        'user_id',
+        'order_date',
         'status',
         'total_amount',
-        'customer_name',
-        'customer_email',
-        'shipping_address',
-        'shipping_status'
+        'discount_code',
+        'discount_amount',
+        'final_amount',
+        'payment_type',
+        'payment_status',
+        'delivery_status',
+        'tracking_number',
+        'delivery_date',
+        'notes',
     ];
+
+    // Optionally, specify if timestamps should be used
+    public $timestamps = true;
+
+    // Relationships
+    public function user()
+    {
+        return $this->belongsTo(User::class);  // Assuming User model exists
+    }
 }

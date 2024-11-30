@@ -23,4 +23,9 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    // In Product model
+    public function discounts()
+    {
+        return $this->hasMany(Discount::class); // Or use belongsToMany if the relationship is many-to-many
+    }
 }

@@ -15,7 +15,9 @@ use App\Http\Controllers\{
     PermissionController,
     TicketController,
     AssignRoleController,
-    SidebarController
+    DiscountController,
+    ShippingAddressController,
+    BillingAddressController
 };
 
 /*
@@ -81,14 +83,13 @@ Route::middleware(['auth'])->group(
                 ->name('roles.assign-permission');
             // Route::patch('products/{id}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggleStatus');
             Route::resource('assignRole', AssignRoleController::class);
+            Route::resource('discounts', DiscountController::class);
         });
-
+        Route::get('/product/{productId}/discount', [OrderController::class, 'getProductDiscount'])->name('orders.getProductDiscount');
+        Route::resource('shipping_addresses', ShippingAddressController::class);
+        Route::resource('billing_addresses', BillingAddressController::class);
         Route::resource('orders', OrderController::class);
         Route::get('/stats', [OrderController::class, 'stats'])->name('orders.stats');
-        // Route::put('orders/{order}/update-status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
-        // Route::put('orders/{order}/refund-cancel', [OrderController::class, 'refundCancel'])->name('orders.refundCancel');
-        // Route::get('/assignRole', [RoleController::class, 'assignRoleShow'])->name('admin.assignRole');
-        // Route::post('/assignroletouser', [RoleController::class, 'assignRole'])->name('admin.assignroletouser');
         Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     }
 );
