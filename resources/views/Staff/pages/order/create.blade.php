@@ -8,40 +8,6 @@
 
     <form action="{{ route('orders.store') }}" method="POST">
         @csrf
-
-        <!-- Order Items (Dynamic Fields for Multiple Items) -->
-        <h3>Order Items</h3>
-        <div id="order-items">
-            <div class="order-item">
-                <div class="form-group">
-                    <label for="product_id">Product</label>
-                    <select name="order_items[0][product_id]" class="form-control product-select" data-index="0" required>
-                        <option value="" data-price="0" selected>Select Product</option>
-                        @foreach ($products as $product)
-                        <option value="{{ $product->id }}" data-price="{{ $product->price }}">
-                            {{ $product->name }} - ${{ $product->price }}
-                        </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="quantity">Quantity</label>
-                    <input type="number" name="order_items[0][quantity]" class="form-control quantity-input" data-index="0" required min="1" value="1">
-                </div>
-
-                <div class="form-group">
-                    <label for="discount_code">Discount Code</label>
-                    <select name="order_items[0][discount_code]" class="form-control discount-code-select" data-index="0">
-                        <option value="" data-discount="0" title="No discount selected">Select Discount Code</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- Button to Add More Order Items -->
-        <button type="button" class="btn btn-secondary" id="add-item-btn">Add Item</button>
-
         <!-- Order Information -->
         <div class="form-group">
             <div class="row">
@@ -62,85 +28,278 @@
                 </div>
             </div>
         </div>
+        <div id="order-items">
+            <div class="order-item ">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="product_id">Product</label>
+                        <select name="order_items[0][product_id]" class="form-control product-select" data-index="0" required>
+                            <option value="" data-price="0" selected>Select Product</option>
+                            @foreach ($products as $product)
+                            <option value="{{ $product->id }}" data-price="{{ $product->price }}">
+                                {{ $product->name }} - ${{ $product->price }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
 
-        <div class="form-group">
-            <label for="payment_type">Payment Type</label>
-            <select name="payment_type" class="form-control">
-                <option value="cod">Cash on Delivery</option>
-                <option value="online">Online</option>
-            </select>
+                    <div class="form-group col-md-1">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" name="order_items[0][quantity]" class="form-control quantity-input" data-index="0" required min="1" value="1">
+                    </div>
+
+                    <div class="form-group col-md-3">
+                        <label for="discount_code">Discount Code</label>
+                        <select name="order_items[0][discount_code]" class="form-control discount-code-select" data-index="0">
+                            <option value="" data-discount="0" title="No discount selected">Select Discount Code</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-1 d-flex align-items-center justify-content-between">
+                        <!-- Add Item Button (Green) -->
+                        <button type="button" class="btn btn-success rounded-circle add-item-btn">
+                            <i class="fas fa-plus"></i>
+                        </button>
+
+                        <!-- Remove Item Button (Red) -->
+                        <button type="button" class="btn btn-danger rounded-circle remove-item-btn" disabled>
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="payment_status">Payment Status</label>
-            <select name="payment_status" class="form-control">
-                <option value="pending">Pending</option>
-                <option value="paid">Paid</option>
-                <option value="refunded">Refunded</option>
-                <option value="failed">Failed</option>
-            </select>
+
+        <div class="row">
+            <div id="billing-address" class="address-section col-md-6">
+                <h3>Billing Address</h3>
+                <div class="form-group">
+                    <label for="billing-name">Full Name</label>
+                    <input type="text" id="billing-name" name="billing[name]" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="billing-address-line1">Address Line 1</label>
+                    <input type="text" id="billing-address-line1" name="billing[address_line1]" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="billing-address-line2">Address Line 2</label>
+                    <input type="text" id="billing-address-line2" name="billing[address_line2]" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="billing-country">Country</label>
+                    <select id="billing-country" name="billing[country]" class="form-control" required>
+                        <option value="">Select Country</option>
+                        <option value="USA">USA</option>
+                        <option value="Canada">Canada</option>
+                        <!-- Add other countries here -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="billing-city">City</label>
+                    <input type="text" id="billing-city" name="billing[city]" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="billing-zip">Zip Code</label>
+                    <input type="text" id="billing-zip" name="billing[zip]" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="billing-contact-number">Contact Number</label>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <select id="billing-country-code" name="billing[country_code]" class="form-control" required>
+                                <option value="+1">+1 (USA)</option>
+                                <option value="+44">+44 (UK)</option>
+                                <option value="+91">+91 (India)</option>
+                                <!-- Add more country codes here -->
+                            </select>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" id="billing-contact-number" name="billing[contact_number]" class="form-control" placeholder="Enter your phone number" required>
+
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Checkbox for copying address -->
+                <div class="form-group">
+                    <input type="checkbox" id="copy-address-checkbox">
+                    <label for="copy-address-checkbox">Copy Billing Address to Delivery Address</label>
+                </div>
+            </div>
+
+            <!-- Delivery Address -->
+            <div id="delivery-address" class="address-section col-md-6">
+                <h3>Delivery Address</h3>
+                <div class="form-group">
+                    <label for="delivery-name">Full Name</label>
+                    <input type="text" id="delivery-name" name="delivery[name]" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="delivery-address-line1">Address Line 1</label>
+                    <input type="text" id="delivery-address-line1" name="delivery[address_line1]" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="delivery-address-line2">Address Line 2</label>
+                    <input type="text" id="delivery-address-line2" name="delivery[address_line2]" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="delivery-country">Country</label>
+                    <select id="delivery-country" name="delivery[country]" class="form-control" required>
+                        <option value="">Select Country</option>
+                        <option value="USA">USA</option>
+                        <option value="Canada">Canada</option>
+                        <!-- Add other countries here -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="delivery-city">City</label>
+                    <input type="text" id="delivery-city" name="delivery[city]" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="delivery-zip">Zip Code</label>
+                    <input type="text" id="delivery-zip" name="delivery[zip]" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="delivery-contact-number">Contact Number</label>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <select id="delivery-country-code" name="delivery[country_code]" class="form-control" required>
+                                <option value="+1">+1 (USA)</option>
+                                <option value="+44">+44 (UK)</option>
+                                <option value="+91">+91 (India)</option>
+                                <!-- Add more country codes here -->
+                            </select>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" id="delivery-contact-number" name="delivery[contact_number]" class="form-control" placeholder="Enter your phone number" required>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="delivery_status">Delivery Status</label>
-            <select name="delivery_status" class="form-control">
-                <option value="pending">Pending</option>
-                <option value="shipped">Shipped</option>
-                <option value="delivered">Delivered</option>
-                <option value="returned">Returned</option>
-                <option value="canceled">Canceled</option>
-            </select>
-        </div>
+</div>
 
-        <!-- Submit Button -->
+<div class="row p-2">
+    <div class="form-group col-md-6">
+        <label for="billing-email">Email Address</label>
+        <input type="email" id="billing-email" name="billing[email]" class="form-control" placeholder="Enter your email address" required>
+    </div>
+    <div class="form-group col-md-6">
+        <label for="payment_type">Payment Type</label>
+        <select name="payment_type" class="form-control">
+            <option value="cod">Cash on Delivery</option>
+            <option value="online">Online</option>
+        </select>
+    </div>
+
+    <!-- <div class="form-group col-md-4">
+                <label for="payment_status">Payment Status</label>
+                <select name="payment_status" class="form-control">
+                    <option value="pending">Pending</option>
+                    <option value="paid">Paid</option>
+                    <option value="refunded">Refunded</option>
+                    <option value="failed">Failed</option>
+                </select>
+            </div>
+
+            <div class="form-group col-md-4">
+                <label for="delivery_status">Delivery Status</label>
+                <select name="delivery_status" class="form-control">
+                    <option value="pending">Pending</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="returned">Returned</option>
+                    <option value="canceled">Canceled</option>
+                </select>
+            </div> -->
+</div>
+
+<!-- Submit Button -->
+<div class="row m-1">
+    <div class="form-group col-md-12">
         <button type="submit" class="btn btn-primary">Create Order</button>
-    </form>
+    </div>
+</div>
+
+</form>
 </div>
 
 <script>
     let itemIndex = 1;
 
     // Add new order item dynamically
-    document.getElementById('add-item-btn').addEventListener('click', function() {
+    document.querySelector('.add-item-btn').addEventListener('click', function() {
         const orderItemsDiv = document.getElementById('order-items');
         const newItemDiv = document.createElement('div');
         newItemDiv.classList.add('order-item');
-
         newItemDiv.innerHTML = `
-            <div class="form-group">
-                <label for="product_id">Product</label>
+        <div class="row pt-1">
+            <div class="form-group col-md-6">
+
                 <select name="order_items[${itemIndex}][product_id]" class="form-control product-select" data-index="${itemIndex}" required>
                     <option value="" data-price="0" selected>Select Product</option>
                     @foreach ($products as $product)
                         <option value="{{ $product->id }}" data-price="{{ $product->price }}">
-                            {{ $product->name }} - '$'{{ $product->price }}
+                            {{ $product->name }} - ${{ $product->price }}
                         </option>
                     @endforeach
                 </select>
             </div>
+            <div class="form-group col-md-1">
 
-            <div class="form-group">
-                <label for="quantity">Quantity</label>
                 <input type="number" name="order_items[${itemIndex}][quantity]" class="form-control quantity-input" data-index="${itemIndex}" required min="1" value="1">
             </div>
+            <div class="form-group col-md-3">
 
-            <div class="form-group">
-                <label for="discount_code">Discount Code</label>
                 <select name="order_items[${itemIndex}][discount_code]" class="form-control discount-code-select" data-index="${itemIndex}">
                     <option value="" data-discount="0" title="No discount selected">Select Discount Code</option>
                 </select>
             </div>
-        `;
+            <div class="form-group col-md-1 d-flex align-items-center justify-content-between">
+
+                        <button type="button" class="btn btn-success rounded-circle add-item-btn">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button type="button" class="btn btn-danger rounded-circle remove-item-btn">
+                    <i class="fas fa-minus"></i>
+                </button>
+
+            </div>
+        </div>
+    `;
+
         orderItemsDiv.appendChild(newItemDiv);
-        itemIndex++;
+
+        // Enable the remove button for the current item
+        const removeBtn = newItemDiv.querySelector('.remove-item-btn');
+        removeBtn.addEventListener('click', function() {
+            newItemDiv.remove();
+            updateAmounts();
+        });
+
+        // Update amounts on any new changes
+        const productSelect = newItemDiv.querySelector('.product-select');
+        const quantityInput = newItemDiv.querySelector('.quantity-input');
+        productSelect.addEventListener('change', updateAmounts);
+        quantityInput.addEventListener('input', updateAmounts);
+
+        itemIndex++; // Increment the item index for unique names
     });
+
 
     // Update amounts dynamically
     function updateAmounts() {
         let totalAmount = 0;
         let totalDiscount = 0;
 
-        // Loop through each order item
         document.querySelectorAll('.order-item').forEach((item) => {
             const productSelect = item.querySelector('.product-select');
             const quantityInput = item.querySelector('.quantity-input');
@@ -150,70 +309,95 @@
             const quantity = parseInt(quantityInput.value || 0);
             const discountPercentage = parseFloat(discountSelect.options[discountSelect.selectedIndex]?.dataset?.discount || 0);
 
-            const itemTotal = price * quantity; // Total price for the item
-            const itemDiscount = (itemTotal * discountPercentage) / 100; // Discount for the item
+            const itemTotal = price * quantity;
+            const itemDiscount = (itemTotal * discountPercentage) / 100;
 
-            totalAmount += itemTotal; // Accumulate total amount
-            totalDiscount += itemDiscount; // Accumulate total discount
+            totalAmount += itemTotal;
+            totalDiscount += itemDiscount;
         });
 
-        // Update total amount
         document.querySelector('#display-total-amount').textContent = `$${totalAmount.toFixed(2)}`;
         document.querySelector('input[name="total_amount"]').value = totalAmount.toFixed(2);
-
-        // Update discount amount
         document.querySelector('#display-discount-amount').textContent = `$${totalDiscount.toFixed(2)}`;
         document.querySelector('input[name="discount_amount"]').value = totalDiscount.toFixed(2);
-
-        // Update final amount
         const finalAmount = totalAmount - totalDiscount;
         document.querySelector('#display-final-amount').textContent = `$${finalAmount.toFixed(2)}`;
         document.querySelector('input[name="final_amount"]').value = finalAmount.toFixed(2);
     }
 
-    // Function to fetch the discount for a selected product
+    // Fetch discounts for selected products
     function fetchDiscount(productId, index) {
         fetch(`/product/${productId}/discount`)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 const discountSelect = document.querySelector(`.discount-code-select[data-index="${index}"]`);
                 discountSelect.innerHTML = '<option value="" data-discount="0" title="No discount selected">Select Discount Code</option>';
 
-                // Populate discount options
-                data.forEach(discount => {
-                    const option = document.createElement('option');
-                    option.value = discount.code;
-                    option.dataset.discount = discount.value;
-                    option.title = discount.description || `Apply ${discount.value}% off`;
-                    option.textContent = `${discount.code} - ${discount.value}% Off`;
-                    discountSelect.appendChild(option);
-                });
+                if (data && data.length > 0) {
+                    data.forEach(discount => {
+                        const option = document.createElement('option');
+                        option.value = discount.code;
+                        option.dataset.discount = discount.value;
+                        option.title = discount.description || `${discount.value}% off`;
+                        option.textContent = `${discount.code} - ${discount.value}%`;
+                        discountSelect.appendChild(option);
+                    });
+                } else {
+                    const noDiscountOption = document.createElement('option');
+                    noDiscountOption.value = '';
+                    noDiscountOption.dataset.discount = '0';
+                    noDiscountOption.textContent = 'No discounts available';
+                    discountSelect.appendChild(noDiscountOption);
+                }
 
                 updateAmounts();
             })
-            .catch(error => console.error('Error fetching discount:', error));
+            .catch(error => {
+                console.error('Error fetching discount data:', error);
+                // Optionally, notify the user about the error (e.g., using an alert or toast notification)
+            });
     }
 
-    // Event listener for product selection to fetch discount
+
+    // Handle dynamic changes
     document.addEventListener('change', function(event) {
         if (event.target.classList.contains('product-select')) {
-            const index = event.target.getAttribute('data-index');
+            const index = event.target.dataset.index;
             const productId = event.target.value;
-            if (productId) {
-                fetchDiscount(productId, index); // Fetch discount for the selected product
-            }
+            if (productId) fetchDiscount(productId, index);
         }
-
-        if (
-            event.target.classList.contains('product-select') ||
-            event.target.classList.contains('quantity-input') ||
-            event.target.classList.contains('discount-code-select')
-        ) {
-            updateAmounts(); // Update the amounts when any of these fields change
-        }
+        updateAmounts();
     });
 
-    // Trigger amounts update on page load
+    // Initial calculation on page load
     document.addEventListener('DOMContentLoaded', updateAmounts);
+    document.addEventListener('DOMContentLoaded', function() {
+        const copyCheckbox = document.getElementById('copy-address-checkbox');
+
+        copyCheckbox.addEventListener('change', function() {
+            if (copyCheckbox.checked) {
+                // Copy the values from billing address to delivery address
+                document.getElementById('delivery-name').value = document.getElementById('billing-name').value;
+                document.getElementById('delivery-address-line1').value = document.getElementById('billing-address-line1').value;
+                document.getElementById('delivery-address-line2').value = document.getElementById('billing-address-line2').value;
+                document.getElementById('delivery-city').value = document.getElementById('billing-city').value;
+                document.getElementById('delivery-zip').value = document.getElementById('billing-zip').value;
+                document.getElementById('delivery-country').value = document.getElementById('billing-country').value;
+            } else {
+                // Clear delivery address if unchecked
+                document.getElementById('delivery-name').value = '';
+                document.getElementById('delivery-address-line1').value = '';
+                document.getElementById('delivery-address-line2').value = '';
+                document.getElementById('delivery-city').value = '';
+                document.getElementById('delivery-zip').value = '';
+                document.getElementById('delivery-country').value = '';
+            }
+        });
+    });
 </script>
 @endsection
