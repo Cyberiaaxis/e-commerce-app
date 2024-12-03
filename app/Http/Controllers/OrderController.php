@@ -55,54 +55,105 @@ class OrderController extends Controller
 
     public function store(Request $request)
     {
-        // Validate incoming request data
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'total_amount' => 'required|numeric',
-            'discount_code' => 'nullable|string',
-            'discount_amount' => 'nullable|numeric',
-            'final_amount' => 'required|numeric',
-            'payment_type' => 'required|in:cod,online',
-            'payment_status' => 'required|in:pending,paid,refunded,failed',
-            'delivery_status' => 'required|in:pending,shipped,delivered,returned,canceled',
-            'tracking_number' => 'nullable|string',
-            'delivery_date' => 'nullable|date',
-            'notes' => 'nullable|string',
-            'pincode' => 'required|string', // Validate pincode
+        $rules = [
+            'total_amount' => 'required|numeric|min:0',
+            'discount_amount' => 'required|numeric|min:0',
+            'final_amount' => 'required|numeric|min:0',
+            'order_items' => 'required|array|min:1',
+            'order_items.*.product_id' => 'required|integer|exists:products,id', // Assuming you have a products table
+            'order_items.*.quantity' => 'required|integer|min:1',
+            'order_items.*.discount_code' => 'nullable|string|max:50',
+
+            'billing.name' => 'required|string|max:255',
+            'billing.address_line1' => 'required|string|max:255',
+            'billing.address_line2' => 'nullable|string|max:255',
+            'billing.country' => 'required|string|max:100',
+            'billing.city' => 'required|string|max:100',
+            'billing.zip_code' => 'required|string|max:20',
+            'billing.country_code' => 'required|string|size:2', // or use regex for country codes
+            'billing.contact_number' => 'required|string|max:20',
+            'billing.email' => 'required|email|max:255',
+
+            'delivery.name' => 'required|string|max:255',
+            'delivery.address_line1' => 'required|string|max:255',
+            'delivery.address_line2' => 'nullable|string|max:255',
+            'delivery.country' => 'required|string|max:100',
+            'delivery.city' => 'required|string|max:100',
+            'delivery.zip_code' => 'required|string|max:20',
+            'delivery.country_code' => 'required|string|size:2',
+            'delivery.contact_number' => 'required|string|max:20',
+
+            'payment_type' => 'required|in:cod,card,paypal', // Adjust based on allowed payment types
+        ];
+
+        $messages = [
+            'order_items.*.product_id.exists' => 'One or more products are invalid.',
+            'billing.email.email' => 'Please provide a valid email address.',
+        ];
+
+        $validatedData = $request->validate($rules, $messages);
+
+        $order = Order::create([
+            'user_id' => auth()->user()->id, // Authenticated user ID
+            'order_date' => Carbon::now(), // Current timestamp
+            'total_amount' => $validatedData['total_amount'],
+            'discount_code' => $validatedData['discount_code'] ?? null,
+            'discount_amount' => $validatedData['discount_amount'],
+            'final_amount' => $validatedData['final_amount'],
+            'payment_type' => $validatedData['payment_type'],
         ]);
 
-        // Calculate delivery date based on pincode
-        $validated['delivery_date'] = $this->calculateDeliveryDate($validated['pincode']);
+        dd($order);
 
-        // Generate unique order number
-        $validated['order_number'] = 'SO-' . strtoupper(substr(md5(Str::uuid()), 0, 10));
+        // // Validate incoming request data
+        // $validated = $request->validate([
+        //     'total_amount' => 'required|numeric',
+        //     'discount_code' => 'nullable|string',
+        //     'discount_amount' => 'nullable|numeric',
+        //     'final_amount' => 'required|numeric',
+        //     'payment_type' => 'required|in:cod,online',
+        //     'payment_status' => 'required|in:pending,paid,refunded,failed',
+        //     'delivery_status' => 'required|in:pending,shipped,delivered,returned,canceled',
+        //     'tracking_number' => 'nullable|string',
+        //     'delivery_date' => 'nullable|date',
+        //     'notes' => 'nullable|string',
+        //     'pincode' => 'required|string', // Validate pincode
+        // ]);
 
-        // If discount code is provided, validate and calculate discount
-        if ($validated['discount_code']) {
-            $discount = Discount::where('code', $validated['discount_code'])->first();
-            if ($discount) {
-                $validated['discount_amount'] = $discount->value;
-            } else {
-                return back()->withErrors(['discount_code' => 'Invalid discount code.']);
-            }
-        }
+        // dd($validated);
 
-        // Calculate final amount after discount
-        $validated['final_amount'] = $validated['total_amount'] - ($validated['discount_amount'] ?? 0);
+        // // Calculate delivery date based on pincode
+        // $validated['delivery_date'] = $this->calculateDeliveryDate($validated['pincode']);
 
-        // Generate unique tracking number
-        $trackingNumber = Str::random(10);
-        while (Order::where('tracking_number', $trackingNumber)->exists()) {
-            $trackingNumber = Str::random(10); // Ensure uniqueness
-        }
+        // // Generate unique order number
+        // $validated['order_number'] = 'SO-' . strtoupper(substr(md5(Str::uuid()), 0, 10));
 
-        $validated['tracking_number'] = $trackingNumber;
+        // // If discount code is provided, validate and calculate discount
+        // if ($validated['discount_code']) {
+        //     $discount = Discount::where('code', $validated['discount_code'])->first();
+        //     if ($discount) {
+        //         $validated['discount_amount'] = $discount->value;
+        //     } else {
+        //         return back()->withErrors(['discount_code' => 'Invalid discount code.']);
+        //     }
+        // }
 
-        // Create the order with validated data
-        Order::create($validated);
+        // // Calculate final amount after discount
+        // $validated['final_amount'] = $validated['total_amount'] - ($validated['discount_amount'] ?? 0);
 
-        // Redirect back to the order list with a success message
-        return redirect()->route('orders.index')->with('success', 'Order created successfully!');
+        // // Generate unique tracking number
+        // $trackingNumber = Str::random(10);
+        // while (Order::where('tracking_number', $trackingNumber)->exists()) {
+        //     $trackingNumber = Str::random(10); // Ensure uniqueness
+        // }
+
+        // $validated['tracking_number'] = $trackingNumber;
+
+        // // Create the order with validated data
+        // Order::create($validated);
+
+        // // Redirect back to the order list with a success message
+        // return redirect()->route('orders.index')->with('success', 'Order created successfully!');
     }
 
 

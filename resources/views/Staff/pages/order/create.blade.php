@@ -4,6 +4,17 @@
 
 @section('content')
 <div class="container">
+    <!-- Display validation errors if there are any -->
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
     <h2>Create New Order</h2>
 
     <form action="{{ route('orders.store') }}" method="POST">
@@ -28,10 +39,10 @@
                 </div>
             </div>
         </div>
-        <div id="order-items">
+        <div class="form-group" id="order-items">
             <div class="order-item ">
                 <div class="row">
-                    <div class="form-group col-md-6">
+                    <div class="col-md-6">
                         <label for="product_id">Product</label>
                         <select name="order_items[0][product_id]" class="form-control product-select" data-index="0" required>
                             <option value="" data-price="0" selected>Select Product</option>
@@ -43,18 +54,18 @@
                         </select>
                     </div>
 
-                    <div class="form-group col-md-1">
+                    <div class=" col-md-1">
                         <label for="quantity">Quantity</label>
                         <input type="number" name="order_items[0][quantity]" class="form-control quantity-input" data-index="0" required min="1" value="1">
                     </div>
 
-                    <div class="form-group col-md-3">
+                    <div class=" col-md-3">
                         <label for="discount_code">Discount Code</label>
                         <select name="order_items[0][discount_code]" class="form-control discount-code-select" data-index="0">
                             <option value="" data-discount="0" title="No discount selected">Select Discount Code</option>
                         </select>
                     </div>
-                    <div class="form-group col-md-1 d-flex align-items-center justify-content-between">
+                    <div class="col-md-1 mt-4 d-flex align-items-center justify-content-between">
                         <!-- Add Item Button (Green) -->
                         <button type="button" class="btn btn-success rounded-circle add-item-btn">
                             <i class="fas fa-plus"></i>
@@ -71,7 +82,7 @@
         </div>
 
 
-        <div class="row">
+        <div class="form-group row">
             <div id="billing-address" class="address-section col-md-6">
                 <h3>Billing Address</h3>
                 <div class="form-group">
@@ -103,7 +114,7 @@
 
                 <div class="form-group">
                     <label for="billing-zip">Zip Code</label>
-                    <input type="text" id="billing-zip" name="billing[zip]" class="form-control" required>
+                    <input type="text" id="billing-zip" name="billing[zip_code]" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="billing-contact-number">Contact Number</label>
@@ -117,7 +128,7 @@
                             </select>
                         </div>
                         <div class="col-md-9">
-                            <input type="text" id="billing-contact-number" name="billing[contact_number]" class="form-control" placeholder="Enter your phone number" required>
+                            <input type="number" id="billing-contact-number" name="billing[contact_number]" class="form-control" placeholder="Enter your phone number" required>
 
                         </div>
 
@@ -161,8 +172,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="delivery-zip">Zip Code</label>
-                    <input type="text" id="delivery-zip" name="delivery[zip]" class="form-control" required>
+                    <label for="delivery-zip">Pin Code</label>
+                    <input type="text" id="delivery-zip" name="delivery[zip_code]" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="delivery-contact-number">Contact Number</label>
@@ -184,23 +195,20 @@
                 </div>
             </div>
         </div>
+        <div class="form-group row p-2">
+            <div class="col-md-6">
+                <label for="billing-email">Email Address</label>
+                <input type="email" id="billing-email" name="billing[email]" class="form-control" placeholder="Enter your email address" required>
+            </div>
+            <div class="col-md-6">
+                <label for="payment_type">Payment Type</label>
+                <select name="payment_type" class="form-control">
+                    <option value="cod">Cash on Delivery</option>
+                    <option value="online">Online</option>
+                </select>
+            </div>
 
-</div>
-
-<div class="row p-2">
-    <div class="form-group col-md-6">
-        <label for="billing-email">Email Address</label>
-        <input type="email" id="billing-email" name="billing[email]" class="form-control" placeholder="Enter your email address" required>
-    </div>
-    <div class="form-group col-md-6">
-        <label for="payment_type">Payment Type</label>
-        <select name="payment_type" class="form-control">
-            <option value="cod">Cash on Delivery</option>
-            <option value="online">Online</option>
-        </select>
-    </div>
-
-    <!-- <div class="form-group col-md-4">
+            <!-- <div class="form-group col-md-4">
                 <label for="payment_status">Payment Status</label>
                 <select name="payment_status" class="form-control">
                     <option value="pending">Pending</option>
@@ -220,24 +228,22 @@
                     <option value="canceled">Canceled</option>
                 </select>
             </div> -->
-</div>
+        </div>
 
-<!-- Submit Button -->
-<div class="row m-1">
-    <div class="form-group col-md-12">
-        <button type="submit" class="btn btn-primary">Create Order</button>
-    </div>
-</div>
-
-</form>
+        <!-- Submit Button -->
+        <div class="form-group row m-1">
+            <div class="col-md-12">
+                <button type="submit" name="submit" class="btn btn-primary">Create Order</button>
+            </div>
+        </div>
+    </form>
 </div>
 
 <script>
     let itemIndex = 1;
 
-    // Add new order item dynamically
-    document.querySelector('.add-item-btn').addEventListener('click', function() {
-        const orderItemsDiv = document.getElementById('order-items');
+    function buildItem(itemIndex, appendTo) {
+        itemIndex++;
         const newItemDiv = document.createElement('div');
         newItemDiv.classList.add('order-item');
         newItemDiv.innerHTML = `
@@ -248,7 +254,7 @@
                     <option value="" data-price="0" selected>Select Product</option>
                     @foreach ($products as $product)
                         <option value="{{ $product->id }}" data-price="{{ $product->price }}">
-                            {{ $product->name }} - ${{ $product->price }}
+                            {{ $product->name }} - '$'{{ $product->price }}
                         </option>
                     @endforeach
                 </select>
@@ -276,7 +282,11 @@
         </div>
     `;
 
-        orderItemsDiv.appendChild(newItemDiv);
+        const addBtn = newItemDiv.querySelector('.add-item-btn');
+        addBtn.addEventListener('click', function() {
+            const newItem = buildItem(itemIndex, appendTo)
+            appendTo.appendChild(newItem);
+        });
 
         // Enable the remove button for the current item
         const removeBtn = newItemDiv.querySelector('.remove-item-btn');
@@ -285,14 +295,28 @@
             updateAmounts();
         });
 
-        // Update amounts on any new changes
-        const productSelect = newItemDiv.querySelector('.product-select');
-        const quantityInput = newItemDiv.querySelector('.quantity-input');
-        productSelect.addEventListener('change', updateAmounts);
-        quantityInput.addEventListener('input', updateAmounts);
+        return newItemDiv;
+    }
 
-        itemIndex++; // Increment the item index for unique names
-    });
+    // Add new order item dynamically
+    const allItems = document.querySelector('.add-item-btn')
+        .addEventListener('click', function() {
+            const orderItemsDiv = document.getElementById('order-items');
+
+            const newItemDiv = buildItem(itemIndex, orderItemsDiv);
+            orderItemsDiv.appendChild(newItemDiv)
+
+
+            // Update amounts on any new changes
+            const productSelect = newItemDiv.querySelector('.product-select');
+            const quantityInput = newItemDiv.querySelector('.quantity-input');
+            productSelect.addEventListener('change', updateAmounts);
+            quantityInput.addEventListener('input', updateAmounts);
+
+            itemIndex++; // Increment the item index for unique names
+
+
+        });
 
 
     // Update amounts dynamically
@@ -307,7 +331,8 @@
 
             const price = parseFloat(productSelect.options[productSelect.selectedIndex]?.dataset?.price || 0);
             const quantity = parseInt(quantityInput.value || 0);
-            const discountPercentage = parseFloat(discountSelect.options[discountSelect.selectedIndex]?.dataset?.discount || 0);
+            const discountPercentage = parseFloat(discountSelect.options[discountSelect.selectedIndex]?.dataset
+                ?.discount || 0);
 
             const itemTotal = price * quantity;
             const itemDiscount = (itemTotal * discountPercentage) / 100;
@@ -336,7 +361,8 @@
             })
             .then(data => {
                 const discountSelect = document.querySelector(`.discount-code-select[data-index="${index}"]`);
-                discountSelect.innerHTML = '<option value="" data-discount="0" title="No discount selected">Select Discount Code</option>';
+                discountSelect.innerHTML =
+                    '<option value="" data-discount="0" title="No discount selected">Select Discount Code</option>';
 
                 if (data && data.length > 0) {
                     data.forEach(discount => {
@@ -382,12 +408,22 @@
         copyCheckbox.addEventListener('change', function() {
             if (copyCheckbox.checked) {
                 // Copy the values from billing address to delivery address
-                document.getElementById('delivery-name').value = document.getElementById('billing-name').value;
-                document.getElementById('delivery-address-line1').value = document.getElementById('billing-address-line1').value;
-                document.getElementById('delivery-address-line2').value = document.getElementById('billing-address-line2').value;
-                document.getElementById('delivery-city').value = document.getElementById('billing-city').value;
-                document.getElementById('delivery-zip').value = document.getElementById('billing-zip').value;
-                document.getElementById('delivery-country').value = document.getElementById('billing-country').value;
+                document.getElementById('delivery-name').value = document.getElementById('billing-name')
+                    .value;
+                document.getElementById('delivery-address-line1').value = document.getElementById(
+                    'billing-address-line1').value;
+                document.getElementById('delivery-address-line2').value = document.getElementById(
+                    'billing-address-line2').value;
+                document.getElementById('delivery-city').value = document.getElementById('billing-city')
+                    .value;
+                document.getElementById('delivery-zip').value = document.getElementById('billing-zip')
+                    .value;
+                document.getElementById('delivery-country').value = document.getElementById(
+                    'billing-country').value;
+                document.getElementById('delivery-country-code').value = document.getElementById(
+                    'billing-country-code').value;
+                document.getElementById('delivery-contact-number').value = document.getElementById(
+                    'billing-contact-number').value;
             } else {
                 // Clear delivery address if unchecked
                 document.getElementById('delivery-name').value = '';
@@ -396,6 +432,8 @@
                 document.getElementById('delivery-city').value = '';
                 document.getElementById('delivery-zip').value = '';
                 document.getElementById('delivery-country').value = '';
+                document.getElementById('delivery-country-code').value = '';
+                document.getElementById('delivery-contact-number').value = '';
             }
         });
     });
