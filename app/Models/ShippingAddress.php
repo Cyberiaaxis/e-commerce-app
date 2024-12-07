@@ -21,6 +21,8 @@ class ShippingAddress extends Model
         'phone'
     ];
 
+    // Optionally, specify if timestamps should be used
+    public $timestamps = false;
     /**
      * Get the order that owns the shipping address.
      */

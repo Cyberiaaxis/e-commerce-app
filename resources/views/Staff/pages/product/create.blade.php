@@ -63,8 +63,8 @@
                             </div>
 
                             <div class="col-12 col-md-6 mb-4">
-                                <label for="quantity" class="form-label h6">Quantity</label>
-                                <input type="number" class="form-control form-control-lg rounded-3 shadow-sm" id="quantity" name="quantity" value="{{ old('quantity') }}" required placeholder="Enter product quantity">
+                                <label for="qty" class="form-label h6">Quantity</label>
+                                <input type="number" class="form-control form-control-lg rounded-3 shadow-sm" id="qty" name="qty" value="{{ old('quantity') }}" required placeholder="Enter product quantity">
                             </div>
 
                             <div class="col-12 mb-4">

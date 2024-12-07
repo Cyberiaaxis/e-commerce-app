@@ -33,6 +33,7 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'category_id' => 'required|exists:categories,id',
+            'qty' => 'required|integer|min:1', // New validation rule for qty
         ]);
 
         // Handle file upload (if there is an image)
@@ -41,20 +42,23 @@ class ProductController extends Controller
             $imageName = time() . '.' . $image->getClientOriginalExtension();
             $image->storeAs('public/images', $imageName);
         }
-        // dd($request->is_active);
-        // Save the product with image name (example)
+
+        // Save the product with quantity
         $product = new Product();
         $product->name = $request->name;
         $product->description = $request->description;
         $product->price = $request->price;
+        $product->qty = $request->qty; // Save the quantity
         $product->image = $imageName ?? null;
         $product->category_id = $request->category_id;
+        $product->is_active = $request->has('is_active');
         $product->save();
 
         return redirect()->route('admin.products.index')
             ->with('lastInsertedProduct', $product->id)
             ->with('success', 'Product created successfully!');
     }
+
 
 
     // Display the specified product
@@ -71,8 +75,10 @@ class ProductController extends Controller
     }
 
 
-    public function update(Request $request, $id)
-    {
+    public function update(
+        Request $request,
+        $id
+    ) {
         // Validate the input data
         $request->validate([
             'name' => 'required',
@@ -80,7 +86,7 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'category_id' => 'int'
+            'qty' => 'required|integer|min:0', // New validation rule for qty
         ]);
 
         // Find the product by ID
@@ -90,6 +96,7 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->description = $request->description;
         $product->price = $request->price;
+        $product->qty = $request->qty; // Update the quantity
         $product->category_id = $request->category_id;
         $product->is_active = $request->has('is_active');
 
@@ -113,6 +120,7 @@ class ProductController extends Controller
         // Redirect back to the products index with a success message
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully!');
     }
+
 
 
     public function destroy($id)

@@ -40,6 +40,7 @@
                                     <th scope="col">Product Name</th>
                                     <th scope="col">Category</th>
                                     <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Actions</th>
                                 </tr>
@@ -51,6 +52,7 @@
                                     <td>{{ $product->name }}</td>
                                     <td>{{ $product->category->category_name }}</td>
                                     <td>${{ number_format($product->price, 2) }}</td>
+                                    <td>{{ $product->qty }}</td>
                                     <td>
                                         <span class="badge {{ $product->is_active ? 'bg-success' : 'bg-danger' }}" data-bs-toggle="tooltip"
                                             title="{{ $product->is_active ? 'Product is Active' : 'Product is Disabled' }}">

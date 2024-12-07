@@ -90,12 +90,8 @@
                     <input type="text" id="billing-name" name="billing[name]" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="billing-address-line1">Address Line 1</label>
-                    <input type="text" id="billing-address-line1" name="billing[address_line1]" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="billing-address-line2">Address Line 2</label>
-                    <input type="text" id="billing-address-line2" name="billing[address_line2]" class="form-control">
+                    <label for="billing-address-line1">Address</label>
+                    <input type="text" id="billing-address-line1" name="billing[address]" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="billing-country">Country</label>
@@ -103,15 +99,12 @@
                         <option value="">Select Country</option>
                         <option value="USA">USA</option>
                         <option value="Canada">Canada</option>
-                        <!-- Add other countries here -->
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label for="billing-city">City</label>
                     <input type="text" id="billing-city" name="billing[city]" class="form-control" required>
                 </div>
-
                 <div class="form-group">
                     <label for="billing-zip">Zip Code</label>
                     <input type="text" id="billing-zip" name="billing[zip_code]" class="form-control" required>
@@ -124,76 +117,62 @@
                                 <option value="+1">+1 (USA)</option>
                                 <option value="+44">+44 (UK)</option>
                                 <option value="+91">+91 (India)</option>
-                                <!-- Add more country codes here -->
                             </select>
                         </div>
                         <div class="col-md-9">
-                            <input type="number" id="billing-contact-number" name="billing[contact_number]" class="form-control" placeholder="Enter your phone number" required>
-
+                            <input type="number" id="billing-contact-number" name="billing[contact_number]" class="form-control" required>
                         </div>
-
                     </div>
                 </div>
-                <!-- Checkbox for copying address -->
                 <div class="form-group">
                     <input type="checkbox" id="copy-address-checkbox">
-                    <label for="copy-address-checkbox">Copy Billing Address to Delivery Address</label>
+                    <label for="copy-address-checkbox">Copy Billing Address to Shipping Address</label>
                 </div>
             </div>
-
-            <!-- Delivery Address -->
-            <div id="delivery-address" class="address-section col-md-6">
-                <h3>Delivery Address</h3>
+            <div id="shipping-address" class="address-section col-md-6">
+                <h3>Shipping Address</h3>
                 <div class="form-group">
-                    <label for="delivery-name">Full Name</label>
-                    <input type="text" id="delivery-name" name="delivery[name]" class="form-control" required>
+                    <label for="shipping-name">Full Name</label>
+                    <input type="text" id="shipping-name" name="shipping[name]" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="delivery-address-line1">Address Line 1</label>
-                    <input type="text" id="delivery-address-line1" name="delivery[address_line1]" class="form-control" required>
+                    <label for="shipping-address-line1">Address</label>
+                    <input type="text" id="shipping-address-line1" name="shipping[address]" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="delivery-address-line2">Address Line 2</label>
-                    <input type="text" id="delivery-address-line2" name="delivery[address_line2]" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="delivery-country">Country</label>
-                    <select id="delivery-country" name="delivery[country]" class="form-control" required>
+                    <label for="shipping-country">Country</label>
+                    <select id="shipping-country" name="shipping[country]" class="form-control" required>
                         <option value="">Select Country</option>
                         <option value="USA">USA</option>
                         <option value="Canada">Canada</option>
-                        <!-- Add other countries here -->
                     </select>
                 </div>
-
                 <div class="form-group">
-                    <label for="delivery-city">City</label>
-                    <input type="text" id="delivery-city" name="delivery[city]" class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="delivery-zip">Pin Code</label>
-                    <input type="text" id="delivery-zip" name="delivery[zip_code]" class="form-control" required>
+                    <label for="shipping-city">City</label>
+                    <input type="text" id="shipping-city" name="shipping[city]" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="delivery-contact-number">Contact Number</label>
+                    <label for="shipping-zip">Pin Code</label>
+                    <input type="text" id="shipping-zip" name="shipping[zip_code]" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="shipping-contact-number">Contact Number</label>
                     <div class="row">
                         <div class="col-md-3">
-                            <select id="delivery-country-code" name="delivery[country_code]" class="form-control" required>
+                            <select id="shipping-country-code" name="shipping[country_code]" class="form-control" required>
                                 <option value="+1">+1 (USA)</option>
                                 <option value="+44">+44 (UK)</option>
                                 <option value="+91">+91 (India)</option>
-                                <!-- Add more country codes here -->
                             </select>
                         </div>
                         <div class="col-md-9">
-                            <input type="text" id="delivery-contact-number" name="delivery[contact_number]" class="form-control" placeholder="Enter your phone number" required>
-
+                            <input type="text" id="shipping-contact-number" name="shipping[contact_number]" class="form-control" required>
                         </div>
                     </div>
-
                 </div>
             </div>
+
+
         </div>
         <div class="form-group row p-2">
             <div class="col-md-6">
@@ -207,27 +186,6 @@
                     <option value="online">Online</option>
                 </select>
             </div>
-
-            <!-- <div class="form-group col-md-4">
-                <label for="payment_status">Payment Status</label>
-                <select name="payment_status" class="form-control">
-                    <option value="pending">Pending</option>
-                    <option value="paid">Paid</option>
-                    <option value="refunded">Refunded</option>
-                    <option value="failed">Failed</option>
-                </select>
-            </div>
-
-            <div class="form-group col-md-4">
-                <label for="delivery_status">Delivery Status</label>
-                <select name="delivery_status" class="form-control">
-                    <option value="pending">Pending</option>
-                    <option value="shipped">Shipped</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="returned">Returned</option>
-                    <option value="canceled">Canceled</option>
-                </select>
-            </div> -->
         </div>
 
         <!-- Submit Button -->
@@ -407,33 +365,23 @@
 
         copyCheckbox.addEventListener('change', function() {
             if (copyCheckbox.checked) {
-                // Copy the values from billing address to delivery address
-                document.getElementById('delivery-name').value = document.getElementById('billing-name')
-                    .value;
-                document.getElementById('delivery-address-line1').value = document.getElementById(
-                    'billing-address-line1').value;
-                document.getElementById('delivery-address-line2').value = document.getElementById(
-                    'billing-address-line2').value;
-                document.getElementById('delivery-city').value = document.getElementById('billing-city')
-                    .value;
-                document.getElementById('delivery-zip').value = document.getElementById('billing-zip')
-                    .value;
-                document.getElementById('delivery-country').value = document.getElementById(
-                    'billing-country').value;
-                document.getElementById('delivery-country-code').value = document.getElementById(
-                    'billing-country-code').value;
-                document.getElementById('delivery-contact-number').value = document.getElementById(
-                    'billing-contact-number').value;
+                // Copy values from Billing to Shipping fields
+                document.getElementById('shipping-name').value = document.getElementById('billing-name').value;
+                document.getElementById('shipping-address-line1').value = document.getElementById('billing-address-line1').value;
+                document.getElementById('shipping-city').value = document.getElementById('billing-city').value;
+                document.getElementById('shipping-zip').value = document.getElementById('billing-zip').value;
+                document.getElementById('shipping-country').value = document.getElementById('billing-country').value;
+                document.getElementById('shipping-country-code').value = document.getElementById('billing-country-code').value;
+                document.getElementById('shipping-contact-number').value = document.getElementById('billing-contact-number').value;
             } else {
-                // Clear delivery address if unchecked
-                document.getElementById('delivery-name').value = '';
-                document.getElementById('delivery-address-line1').value = '';
-                document.getElementById('delivery-address-line2').value = '';
-                document.getElementById('delivery-city').value = '';
-                document.getElementById('delivery-zip').value = '';
-                document.getElementById('delivery-country').value = '';
-                document.getElementById('delivery-country-code').value = '';
-                document.getElementById('delivery-contact-number').value = '';
+                // Clear Shipping fields
+                document.getElementById('shipping-name').value = '';
+                document.getElementById('shipping-address-line1').value = '';
+                document.getElementById('shipping-city').value = '';
+                document.getElementById('shipping-zip').value = '';
+                document.getElementById('shipping-country').value = '';
+                document.getElementById('shipping-country-code').value = '';
+                document.getElementById('shipping-contact-number').value = '';
             }
         });
     });

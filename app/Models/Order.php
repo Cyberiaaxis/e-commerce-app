@@ -37,4 +37,20 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);  // Assuming User model exists
     }
+
+    public function billing()
+    {
+
+        return $this->hasOne(BillingAddress::class);
+    }
+
+    public function shipping()
+    {
+        return $this->hasOne(ShippingAddress::class);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }

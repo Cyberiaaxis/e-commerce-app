@@ -34,5 +34,8 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-
+    'location' => [
+        'driver' => 'ipinfo',
+        'token' => env('LOCATION_API_KEY'), // Optional, if you are using a paid API
+    ],
 ];

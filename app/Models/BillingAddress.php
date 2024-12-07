@@ -22,11 +22,24 @@ class BillingAddress extends Model
         'phone'
     ];
 
+    // Optionally, specify if timestamps should be used
+    public $timestamps = false;
+
     /**
      * Get the order that owns the billing address.
      */
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function shipping()
+    {
+        return $this->hasOne(ShippingAddress::class);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
     }
 }

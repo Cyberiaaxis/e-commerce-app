@@ -17,7 +17,8 @@ use App\Http\Controllers\{
     AssignRoleController,
     DiscountController,
     ShippingAddressController,
-    BillingAddressController
+    BillingAddressController,
+    DashboardController
 };
 
 /*
@@ -68,10 +69,7 @@ Route::middleware(['auth'])->group(
 
         // Admin-Only Routes for Roles & Permissions
         Route::prefix('admin')->name('admin.')->group(function () {
-            Route::get('/dashboard', function () {
-                return view('Staff.pages.dashboard.index');
-            })->name('dashboard.index');
-
+            Route::resource('/dashboard', DashboardController::class);
             Route::resource('roles', RoleController::class);
             Route::resource('permissions', PermissionController::class);
             Route::resource('products', ProductController::class);

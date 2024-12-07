@@ -54,8 +54,8 @@
                         </div>
 
                         <div class="row">
-                            <!-- Second Column: Pricing & Image -->
-                            <div class="col-12 col-md-6 mb-4">
+                            <!-- Second Column: Pricing, Quantity & Image -->
+                            <div class="col-12 col-md-4 mb-4">
                                 <label for="price" class="form-label h6">Price</label>
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
@@ -63,7 +63,12 @@
                                 </div>
                             </div>
 
-                            <div class="col-12 col-md-6 mb-4">
+                            <div class="col-12 col-md-4 mb-4">
+                                <label for="qty" class="form-label h6">Quantity</label>
+                                <input type="number" class="form-control form-control-lg rounded-3 shadow-sm" id="qty" name="qty" value="{{ old('qty', $product->qty) }}" required placeholder="Enter product quantity">
+                            </div>
+
+                            <div class="col-12 col-md-4 mb-4">
                                 <label for="image" class="form-label h6">Product Image</label>
                                 <input type="file" class="form-control form-control-lg rounded-3 shadow-sm" id="image" name="image">
 
