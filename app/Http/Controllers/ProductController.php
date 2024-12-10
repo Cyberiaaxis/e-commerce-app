@@ -40,7 +40,7 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/images', $imageName);
+            $image->storeAs('images', $imageName);
         }
 
         // Save the product with quantity
@@ -110,7 +110,7 @@ class ProductController extends Controller
             // Store the new image
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/images', $imageName);
+            $image->storeAs('images', $imageName);
             $product->image = $imageName;
         }
 

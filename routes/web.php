@@ -1,25 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{
-    LoginController,
-    ProductController,
-    UserController,
-    CartController,
-    CustomerController,
-    ContactController,
-    AboutController,
-    CategoryController,
-    OrderController,
-    RoleController,
-    PermissionController,
-    TicketController,
-    AssignRoleController,
-    DiscountController,
-    ShippingAddressController,
-    BillingAddressController,
-    DashboardController
-};
 
 /*
 |--------------------------------------------------------------------------
@@ -32,63 +13,58 @@ use App\Http\Controllers\{
 */
 
 // Public Routes
-Route::get('/', [UserController::class, 'index'])->name('home');
-Route::get('/products', [ProductController::class, 'index'])->name('products');
-Route::get('/best-customers', [CustomerController::class, 'index'])->name('best.customers');
-Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
-Route::get('/about', [AboutController::class, 'index'])->name('about');
+Route::get('/', "UserController@index")->name('home');
+Route::get('/products', "ProductController@index")->name('products');
+Route::get('/best-customers', "CustomerController@index")->name('best.customers');
+Route::get('/contact', "ContactController@index")->name('contact.index');
+Route::post('/contact', "ContactController@store")->name('contact.store');
+Route::get('/about', "AboutController@index")->name('about');
 
-// Authentication Routes
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login'])->name('login');
-Route::get('/showRegisterForm', function () {
-    return view('Staff.pages.registration');
-})->name('showRegisterForm');
-Route::post('/register', [UserController::class, 'createUser'])->name('register');
+// // Authentication Routes
+Route::get('/login', "LoginController@showLoginForm")->name('login');
+Route::post('/login', "LoginController@login")->name('login');
+Route::view('/showRegisterForm', 'Staff.pages.registration')->name('showRegisterForm');
+Route::post('/register', "UserController@createUser")->name('register');
 
-// Cart Routes
-Route::post('/cart', [CartController::class, 'addToCart']);
-Route::delete('/cart/{id}', [CartController::class, 'removeFromCart']);
-Route::patch('/cart/{id}', [CartController::class, 'updateQuantity']);
-Route::get('/cart', [CartController::class, 'viewCart']);
+// // Cart Routes
+Route::post('/cart', "CartController@addToCart")->name("cart");
+Route::delete('/cart/{id}', "CartController@removeFromCart");
+Route::patch('/cart/{id}', "CartController@updateQuantity");
+Route::get('/cart', "CartController@viewCart");
 
 
 // Protected User Routes (Requires Authentication)
 Route::middleware(['auth'])->group(
     function () {
-        // dd(auth()->check());
-
         // User Management Routes
         Route::prefix('users')->name('users.')->group(function () {
-            Route::get('/', [UserController::class, 'users'])->name('index');
-            Route::get('{id}/edit', [UserController::class, 'edit'])->name('edit');
-            Route::put('{id}', [UserController::class, 'update'])->name('update');
-            Route::delete('{id}', [UserController::class, 'destroy'])->name('destroy');
+            Route::get('/', "UserController@users")->name('index');
+            Route::get('{id}/edit', "UserController@edit")->name('edit');
+            Route::put('{id}', "UserController@update")->name('update');
+            Route::delete('{id}', "UserController@destroy")->name('destroy');
         });
 
         // Admin-Only Routes for Roles & Permissions
         Route::prefix('admin')->name('admin.')->group(function () {
-            Route::resource('/dashboard', DashboardController::class);
-            Route::resource('roles', RoleController::class);
-            Route::resource('permissions', PermissionController::class);
-            Route::resource('products', ProductController::class);
-            Route::resource('categories', CategoryController::class);
-            Route::resource('roles', RoleController::class);
-            Route::resource('tickets', TicketController::class);
+            Route::resource('/dashboard', "DashboardController");
+            Route::resource('roles', "RoleController");
+            Route::resource('permissions', "PermissionController");
+            Route::resource('products', "ProductController");
+            Route::resource('categories', "CategoryController");
+            Route::resource('roles', "RoleController");
+            Route::resource('tickets', "TicketController");
             // Define the assign-permission route correctly here
-            Route::post('/roles/{role}/assign-permission', [RoleController::class, 'assignPermission'])
-                ->name('roles.assign-permission');
-            // Route::patch('products/{id}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggleStatus');
-            Route::resource('assignRole', AssignRoleController::class);
-            Route::resource('discounts', DiscountController::class);
+            Route::post('/roles/{role}/assign-permission', "RoleController@assignPermission")->name('roles.assign-permission');
+            // Route::patch('products/{id}/toggle-status', [ProductController@toggleStatus'])->name('products.toggleStatus');
+            Route::resource('assignRole', "AssignRoleController");
+            Route::resource('discounts', "DiscountController");
         });
-        Route::get('/product/{productId}/discount', [OrderController::class, 'getProductDiscount'])->name('orders.getProductDiscount');
-        Route::resource('shipping_addresses', ShippingAddressController::class);
-        Route::resource('billing_addresses', BillingAddressController::class);
-        Route::resource('orders', OrderController::class);
-        Route::get('/stats', [OrderController::class, 'stats'])->name('orders.stats');
-        Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+        Route::get('/product/{productId}/discount', "OrderController@getProductDiscount")->name('orders.getProductDiscount');
+        Route::resource('shipping_addresses', "ShippingAddressController");
+        Route::resource('billing_addresses', "BillingAddressController");
+        Route::resource('orders', "OrderController");
+        Route::get('/stats', "OrderController@stats")->name('orders.stats');
+        Route::post('/logout', "LoginController@logout")->name('logout');
     }
 );
 
