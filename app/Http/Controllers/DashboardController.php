@@ -12,29 +12,48 @@ class DashboardController extends Controller
 {
     public function index()
     {
-
-        $salesData = Order::where('status', 'completed') // Only completed orders
-            ->where('order_date', '>=', Carbon::now()->subMonths(6)) // Last 6 months
+        // Fetch sales data for the last 6 months
+        $salesData = Order::where('status', 'completed')
+            ->where('order_date', '>=', Carbon::now()->subMonths(6))
             ->selectRaw('MONTH(order_date) as month, SUM(final_amount) as total_sales')
-            ->groupBy('month') // Group by month
-            ->orderBy('month', 'asc') // Order by month ascending
-            ->get(); // Keep it as a Collection
+            ->groupBy('month')
+            ->orderBy('month', 'asc')
+            ->get();
 
-
-
+        // Total number of completed orders
         $totalOrders = Order::where('status', 'completed')->count();
 
-
+        // Today's sales total
         $dailySales = Order::where('status', 'completed')
-            ->whereDate('order_date', Carbon::today()) // Filter by today's date
-            ->sum('final_amount'); // Sum of the final_amount field
+            ->whereDate('order_date', Carbon::today())
+            ->sum('final_amount');
 
+        // Stock levels data (categories with product counts)
+        $stockLevels = Category::with('products:id,name,description,price,image,is_active,qty,category_id')
+            ->withCount('products')
+            ->get();
 
-        $stockLevels = Category::with(
-            'products:id,name,description,price,image,is_active,qty,category_id'
-        )->withCount('products')->get();
+        // Fetch the total number of customers who made an order in the last month
+        $customerData = Order::where('status', 'completed')
+            ->where('order_date', '>=', Carbon::now()->subMonth()) // Last month
+            ->selectRaw('MONTH(order_date) as month, COUNT(DISTINCT user_id) as total_customers')
+            ->groupBy('month')
+            ->get();
 
+        // Fetch last month's incoming customers
+        $lastMonthStart = Carbon::now()->subMonth()->startOfMonth();
+        $lastMonthEnd = Carbon::now()->subMonth()->endOfMonth();
 
-        return view('Staff.pages.dashboard.index', compact('salesData', 'totalOrders', 'dailySales', 'stockLevels'));
+        $incomingCustomers = Order::where('status', 'completed')
+            ->whereBetween('order_date', [$lastMonthStart, $lastMonthEnd])
+            ->select('user_id')
+            ->distinct()
+            ->whereDoesntHave('user.orders', function ($query) use ($lastMonthStart) {
+                $query->where('order_date', '<', $lastMonthStart);
+            })
+            ->count();
+        // dd($incomingCustomers);
+        // Return the view with the data
+        return view('Staff.pages.dashboard.index', compact('salesData', 'totalOrders', 'dailySales', 'stockLevels', 'customerData', 'incomingCustomers'));
     }
 }

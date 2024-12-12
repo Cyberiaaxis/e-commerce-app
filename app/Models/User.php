@@ -58,4 +58,8 @@ class User extends Authenticatable
         ]);
         $this->save(); // Save the user instance to the database
     }
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

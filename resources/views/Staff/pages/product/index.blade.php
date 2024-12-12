@@ -17,7 +17,7 @@
     <!-- Row for Title and Button (Responsive) -->
     <div class="row mb-4">
         <div class="col-12 col-md-6 d-flex justify-content-start mb-2 mb-md-0">
-            <h4 class="text-primary">Product Management</h4>
+            <h4>Products</h4>
         </div>
 
         <div class="col-12 col-md-6 d-flex justify-content-end">
@@ -38,6 +38,7 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Product Name</th>
+                                    <th scope="col">Image</th>
                                     <th scope="col">Category</th>
                                     <th scope="col">Price</th>
                                     <th scope="col">Quantity</th>
@@ -50,6 +51,13 @@
                                 <tr class="{{ session('lastInsertedProduct') == $product->id ? 'bg-info text-white' : '' }}">
                                     <th scope="row">{{ $product->id }}</th>
                                     <td>{{ $product->name }}</td>
+                                    <td>
+                                        @if($product->image)
+                                        <img src="{{ asset('storage/images/' . $product->image) }}" alt="Product Image" class="img-fluid" style="width: 50px; height: 50px; object-fit: cover;">
+                                        @else
+                                        <span class="text-muted">No image</span>
+                                        @endif
+                                    </td>
                                     <td>{{ $product->category->category_name }}</td>
                                     <td>${{ number_format($product->price, 2) }}</td>
                                     <td>{{ $product->qty }}</td>
@@ -89,16 +97,41 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <p><strong>Product Name:</strong> {{ $product->name }}</p>
-                                                <p><strong>Category:</strong> {{ $product->category->category_name }}</p>
-                                                <p><strong>Description:</strong> {{ $product->description ?? 'No description available' }}</p>
-                                                <p><strong>Price:</strong> ${{ number_format($product->price, 2) }}</p>
-                                                <p><strong>Status:</strong>
-                                                    <span class="badge {{ $product->is_active ? 'bg-success' : 'bg-danger' }}">
-                                                        {{ $product->is_active ? 'Active' : 'Disabled' }}
-                                                    </span>
-                                                </p>
+                                                <div class="row">
+                                                    <!-- Product Image -->
+                                                    <div class="col-12 text-center mb-4">
+                                                        @if($product->image)
+                                                        <img src="{{ asset('storage/images/' . $product->image) }}" alt="Product Image" class="img-fluid rounded shadow-sm" style="max-width: 100%; height: auto; max-height: 300px;">
+                                                        @else
+                                                        <span class="text-muted">No image available</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+
+                                                <div class="row gy-3">
+                                                    <!-- Product Details -->
+                                                    <div class="col-12 col-md-6">
+                                                        <p><strong>Product Name:</strong> {{ $product->name }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <p><strong>Category:</strong> {{ $product->category->category_name }}</p>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <p><strong>Description:</strong> {{ $product->description ?? 'No description available' }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <p><strong>Price:</strong> ${{ number_format($product->price, 2) }}</p>
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <p><strong>Status:</strong>
+                                                            <span class="badge {{ $product->is_active ? 'bg-success' : 'bg-danger' }}">
+                                                                {{ $product->is_active ? 'Active' : 'Disabled' }}
+                                                            </span>
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </div>
+
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                             </div>

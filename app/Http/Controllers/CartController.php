@@ -4,11 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 
-
+/**
+ * CartController handles the operations related to cart actions like adding,
+ * removing, updating, and viewing cart items.
+ */
 class CartController extends Controller
 {
-    public function addToCart(Request $request)
+    /**
+     * Add a product to the cart.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addToCart(Request $request): JsonResponse
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -20,7 +31,7 @@ class CartController extends Controller
             ->first();
 
         if ($cartItem) {
-            // If item exists, update the quantity
+            // If the item already exists, update the quantity
             $cartItem->increment('quantity', $request->quantity);
         } else {
             // Otherwise, create a new cart item
@@ -34,8 +45,13 @@ class CartController extends Controller
         return response()->json($cartItem);
     }
 
-
-    public function removeFromCart($id)
+    /**
+     * Remove an item from the cart.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function removeFromCart(int $id): JsonResponse
     {
         $cartItem = Cart::findOrFail($id);
         $cartItem->delete();
@@ -43,7 +59,14 @@ class CartController extends Controller
         return response()->json(['message' => 'Item removed from cart']);
     }
 
-    public function updateQuantity(Request $request, $id)
+    /**
+     * Update the quantity of a cart item.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateQuantity(Request $request, int $id): JsonResponse
     {
         $request->validate([
             'quantity' => 'required|integer|min:1',
@@ -55,9 +78,17 @@ class CartController extends Controller
         return response()->json($cartItem);
     }
 
-    public function viewCart()
+    /**
+     * View the items in the user's cart.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function viewCart(): View
     {
-        $cartItems = Cart::where('user_id', auth()->id())->with('product')->get();
+        $cartItems = Cart::where('user_id', auth()->id())
+            ->with('product')
+            ->get();
+
         return view('cart', compact('cartItems'));
     }
 }

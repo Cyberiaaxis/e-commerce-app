@@ -5,7 +5,13 @@
 @section('content')
 <div class="container mt-5">
     <div class="card shadow-lg p-4">
-        <h3 class="text-center mb-4">Create Role</h3>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <!-- Back Button -->
+            <a href="{{ route('admin.roles.index') }}" class="btn btn-outline-dark" title="Back to Roles">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+            <h3 class="text-center">Create Role</h3>
+        </div>
         <form action="{{ route('admin.roles.store') }}" method="POST">
             @csrf
 
@@ -35,9 +41,22 @@
 
             <!-- Submit Button -->
             <div class="form-group text-center mt-4">
-                <button type="submit" class="btn btn-primary btn-lg px-4 py-2">Create Role</button>
+                <button type="submit" class="btn btn-primary btn-lg px-4 py-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Create Role">
+                    <i class="fas fa-save"></i>
+                </button>
             </div>
         </form>
     </div>
 </div>
+
+@section('scripts')
+<script>
+    // Enable tooltips on page load
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+</script>
+@endsection
+
 @endsection

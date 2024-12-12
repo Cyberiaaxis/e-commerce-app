@@ -7,8 +7,8 @@
     <!-- Dashboard Cards -->
     <div class="dashboard row justify-content-center">
         <!-- Total Orders Card -->
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-            <div class="card p-4 text-center shadow-lg rounded-3 card-hover bg-light border-primary">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-3 d-flex">
+            <div class="card p-4 text-center shadow-lg rounded-3 card-hover bg-light border-primary w-100 d-flex flex-column">
                 <i class="fas fa-shopping-cart fa-3x mb-3 text-primary"></i>
                 <h3 class="text-primary">Total Orders</h3>
                 <p id="totalOrders" class="fs-4 fw-bold">
@@ -17,9 +17,20 @@
             </div>
         </div>
 
+        <!-- Incoming Customers Card -->
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-3 d-flex">
+            <div class="card p-4 text-center shadow-lg rounded-3 card-hover bg-light border-info w-100 d-flex flex-column">
+                <i class="fas fa-user-plus fa-3x mb-3 text-info"></i>
+                <h3 class="text-info">New Customers (Last Month)</h3>
+                <p id="incomingCustomers" class="fs-4 fw-bold">
+                    {{ $incomingCustomers > 0 ? $incomingCustomers : 'No new customers last month' }}
+                </p>
+            </div>
+        </div>
+
         <!-- Daily Sales Card -->
-        <div class="col-lg-4 col-md-6 col-sm-12 ">
-            <div class="card p-4 text-center shadow-lg rounded-3 card-hover bg-light border-success">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-3 d-flex">
+            <div class="card p-4 text-center shadow-lg rounded-3 card-hover bg-light border-success w-100 d-flex flex-column">
                 <i class="fas fa-dollar-sign fa-3x mb-3 text-success"></i>
                 <h3 class="text-success">Daily Sales</h3>
                 <p id="dailySales" class="fs-4 fw-bold">
@@ -27,9 +38,9 @@
                 </p>
             </div>
         </div>
-
-        <!-- Add any other cards as necessary -->
     </div>
+
+
 
     <!-- Charts Section -->
     <div class="row mb-5">
@@ -53,27 +64,21 @@
 
     <!-- Stock Levels with Modal -->
     <div class="card p-4 shadow-lg rounded-3 bg-light">
-        <h3 class="text-danger">Stock Levels</h3>
+        <h3 class="text-danger">Inventory</h3>
         <div class="table-responsive">
             <table class="table table-bordered table-hover text-center">
                 <thead class="table-danger">
                     <tr>
                         <th>Category</th>
                         <th>Products</th>
-                        <th>Stock Level</th>
+
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($stockLevels as $item)
                     <tr class="@if($item->products_count < 50) table-danger @elseif($item->products_count < 150) table-warning @else table-success @endif">
                         <td>{{ $item->category_name }}</td>
-                        <td>{{ $item->products_count }}</td>
-                        <td>
-                            <span class="d-flex align-items-center justify-content-center pointer" data-bs-toggle="modal" data-bs-target="#stockModal{{$item->id}}">
-                                <i class="fas @if($item->products_count < 50) fa-times-circle text-danger @elseif($item->products_count < 150) fa-exclamation-circle text-warning @else fa-check-circle text-success @endif me-2"></i>
-                                {{ $item->products_count }}
-                            </span>
-                        </td>
+                        <td class="justify-content-center pointer" data-bs-toggle="modal" data-bs-target="#stockModal{{$item->id}}">{{ $item->products_count }}</td>
                     </tr>
 
                     <!-- Modal for stock details -->
@@ -156,6 +161,9 @@
 @php
 $months = $salesData->pluck('month');
 $totals = $salesData->pluck('total_sales');
+$customerMonths = $customerData->pluck('month');
+$totalCustomers = $customerData->pluck('total_customers');
+$newCustomers = $customerData->pluck('new_customers');
 @endphp
 
 <script>
@@ -201,6 +209,36 @@ $totals = $salesData->pluck('total_sales');
                     backgroundColor: 'rgba(255, 159, 64, 0.2)',
                     borderColor: 'rgba(255, 159, 64, 1)',
                     borderWidth: 1,
+                }],
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Customer Overview Chart Initialization
+        const customerCtx = document.getElementById('customerChart').getContext('2d');
+        new Chart(customerCtx, {
+            type: 'line',
+            data: {
+                labels: @json($customerMonths),
+                datasets: [{
+                    label: 'Total Customers',
+                    data: @json($totalCustomers),
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                    fill: true,
+                }, {
+                    label: 'New Customers',
+                    data: @json($newCustomers),
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.2)',
+                    fill: true,
                 }],
             },
             options: {

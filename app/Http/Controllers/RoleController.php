@@ -9,32 +9,24 @@ use App\Models\User;
 
 class RoleController extends Controller
 {
-    public function __construct()
-    {
-        // You can apply middleware here if needed
-        // $this->middleware('auth');
-    }
-
     /**
      * Display a listing of the roles.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(): \Illuminate\View\View
     {
-        // Fetch all roles
-        $roles = Role::all();
+        $roles = Role::paginate(10);
         return view('Staff.pages.roles.index', compact('roles'));
     }
 
     /**
      * Show the form for creating a new role.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function create()
+    public function create(): \Illuminate\View\View
     {
-        // Fetch all permissions to assign to the new role
         $permissions = Permission::all();
         return view('Staff.pages.roles.create', compact('permissions'));
     }
@@ -43,22 +35,20 @@ class RoleController extends Controller
      * Store a newly created role in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
-        // Validate incoming request
-        $request->validate([
-            'name' => 'required|unique:roles,name',
-            'permissions' => 'array', // Ensure permissions are an array
+        $validatedData = $request->validate([
+            'name' => 'required|string|unique:roles,name|max:255',
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'exists:permissions,id', // Validate each permission ID
         ]);
 
-        // Create the new role
-        $role = Role::create(['name' => $request->name]);
+        $role = Role::create(['name' => $validatedData['name']]);
 
-        // Attach permissions to the role
-        if ($request->has('permissions')) {
-            $role->givePermissionTo($request->permissions);
+        if (!empty($validatedData['permissions'])) {
+            $role->givePermissionTo($validatedData['permissions']);
         }
 
         return redirect()->route('admin.roles.index')->with('success', 'Role created successfully.');
@@ -68,11 +58,10 @@ class RoleController extends Controller
      * Show the form for editing the specified role.
      *
      * @param  \Spatie\Permission\Models\Role  $role
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
-    public function edit(Role $role)
+    public function edit(Role $role): \Illuminate\View\View
     {
-        // Fetch all permissions and the current permissions attached to the role
         $permissions = Permission::all();
         $rolePermissions = $role->permissions->pluck('id')->toArray();
 
@@ -84,62 +73,58 @@ class RoleController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Spatie\Permission\Models\Role  $role
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request, Role $role): \Illuminate\Http\RedirectResponse
     {
-        // Validate the request data
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'permissions' => 'array|nullable',  // Ensure permissions is an array if provided
-            'permissions.*' => 'exists:permissions,id',  // Ensure all permission IDs exist in the permissions table
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'exists:permissions,id', // Ensure valid permission IDs
         ]);
 
-        // Update the role
-        $role->update(['name' => $request->name]);
+        $role->update(['name' => $validatedData['name']]);
 
-        // Sync the permissions to the role
-        if ($request->has('permissions')) {
-            // Ensure that the provided permissions are valid
-            $validPermissions = Permission::whereIn('id', $request->permissions)->pluck('id')->toArray();
-
-            // Sync valid permissions only
-            $role->syncPermissions($validPermissions);
+        if (isset($validatedData['permissions'])) {
+            // Sync the permissions only if provided
+            $role->syncPermissions($validatedData['permissions']);
         } else {
-            // Remove all permissions if none are selected
+            // Remove all permissions if none are provided
             $role->syncPermissions();
         }
 
         return redirect()->route('admin.roles.index')->with('success', 'Role updated successfully.');
     }
 
-
     /**
      * Remove the specified role from storage.
      *
      * @param  \Spatie\Permission\Models\Role  $role
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Role $role)
+    public function destroy(Role $role): \Illuminate\Http\RedirectResponse
     {
-        // Delete the role
+        // Ensure no users are assigned to this role before deletion (optional check)
+        if ($role->users()->count() > 0) {
+            return redirect()->route('admin.roles.index')->with('error', 'Role cannot be deleted as it is assigned to users.');
+        }
+
         $role->delete();
+
         return redirect()->route('admin.roles.index')->with('success', 'Role deleted successfully.');
     }
 
     /**
      * Assign a role to a user.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
     public function assignRoleShow()
     {
-        dd("heelo");
-        // $users = User::all();
-        // $roles = Role::all();
-        // return view('Staff.pages.userRoles.index', compact(['users', 'roles']));
+        // This method seems to be incomplete, add functionality as needed
+        $users = User::all();
+        $roles = Role::all();
+        return view('Staff.pages.userRoles.index', compact('users', 'roles'));
     }
 
     /**
@@ -147,30 +132,33 @@ class RoleController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Spatie\Permission\Models\Role  $role
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function attachPermission(Request $request, Role $role)
+    public function attachPermission(Request $request, Role $role): \Illuminate\Http\RedirectResponse
     {
-        // Validate the request
         $request->validate([
-            'permission' => 'required|exists:permissions,name', // Ensure the permission exists
+            'permission' => 'required|exists:permissions,name',
         ]);
 
-        // Attach the permission to the role
         $permission = $request->input('permission');
         $role->givePermissionTo($permission);
 
         return redirect()->route('admin.roles.index')->with('success', 'Permission attached successfully.');
     }
 
-    public function assignPermission(Request $request, Role $role)
+    /**
+     * Assign a permission to a role.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Spatie\Permission\Models\Role  $role
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function assignPermission(Request $request, Role $role): \Illuminate\Http\RedirectResponse
     {
-        // Validate that a permission is selected
         $request->validate([
             'permission' => 'required|string|exists:permissions,name',
         ]);
 
-        // Assign the permission to the role
         $role->givePermissionTo($request->input('permission'));
 
         return redirect()->route('admin.roles.index')->with('success', 'Permission assigned successfully.');

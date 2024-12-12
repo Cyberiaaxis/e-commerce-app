@@ -8,10 +8,15 @@
         <!-- Main Content -->
         <div class="col-md-8 offset-md-2">
             <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h3 class="mb-0">Edit Role</h3>
+                    <!-- Back Button -->
+                    <a href="{{ route('admin.roles.index') }}" class="btn btn-outline-light" title="Back to Roles">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
                 </div>
                 <div class="card-body">
+                    <!-- Form to Edit Role -->
                     <form action="{{ route('admin.roles.update', $role->id) }}" method="POST">
                         @csrf
                         @method('PUT')
@@ -40,13 +45,15 @@
                             </div>
                         </div>
 
-                        <!-- Update and Cancel Buttons with Icons -->
-                        <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Update Role">
-                            <i class="fas fa-save"></i>
-                        </button>
-                        <a href="{{ route('admin.roles.index') }}" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Cancel">
-                            <i class="fas fa-times"></i>
-                        </a>
+                        <!-- Submit and Cancel Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg" data-bs-toggle="tooltip" data-bs-placement="top" title="Update Role">
+                                <i class="fas fa-save"></i>
+                            </button>
+                            <a href="{{ route('admin.roles.index') }}" class="btn btn-secondary btn-lg" data-bs-toggle="tooltip" data-bs-placement="top" title="Cancel">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -54,7 +61,6 @@
     </div>
 </div>
 
-<!-- Initialize Tooltips -->
 @section('scripts')
 <script>
     // Enable tooltips on page load
