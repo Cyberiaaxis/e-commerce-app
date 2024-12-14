@@ -12,7 +12,7 @@ class UserController extends Controller
     public function index()
     {
 
-        return view('Staff.pages.welcome'); // Pass users to the view
+        return view('Customer.layouts.index'); // Pass users to the view
     }
 
     public function users()
