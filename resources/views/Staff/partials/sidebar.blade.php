@@ -12,6 +12,12 @@
             </a>
         </li>
         <li class="nav-item">
+            <a href="{{ route('admin.sliders.index') }}" class="nav-link {{ set_active('admin.dashboard.index') }}">
+                <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
+                <span class="text">Slider Management</span>
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{{ route('orders.index') }}" class="nav-link {{ set_active('orders.index') }}">
                 <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
                 <span class="text">Orders Management</span>

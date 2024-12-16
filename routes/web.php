@@ -58,6 +58,7 @@ Route::middleware(['auth'])->group(
             // Route::patch('products/{id}/toggle-status', [ProductController@toggleStatus'])->name('products.toggleStatus');
             Route::resource('assignRole', "AssignRoleController");
             Route::resource('discounts', "DiscountController");
+            Route::resource('sliders', "SliderController");
         });
         Route::get('/product/{productId}/discount', "OrderController@getProductDiscount")->name('orders.getProductDiscount');
         Route::resource('shipping_addresses', "ShippingAddressController");
