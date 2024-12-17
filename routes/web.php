@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Public Routes
-Route::get('/', "UserController@index")->name('home');
+Route::get('/', "HomeController")->name('home');
+// Route::get('/', "UserController@index")->name('home');
 Route::get('/products', "ProductController@index")->name('products');
 Route::get('/best-customers', "CustomerController@index")->name('best.customers');
 Route::get('/contact', "ContactController@index")->name('contact.index');
@@ -59,7 +60,9 @@ Route::middleware(['auth'])->group(
             Route::resource('assignRole', "AssignRoleController");
             Route::resource('discounts', "DiscountController");
             Route::resource('sliders', "SliderController");
+            Route::resource('chefs', "ChefController");
         });
+        Route::resource('reservations', 'ReservationController');
         Route::get('/product/{productId}/discount', "OrderController@getProductDiscount")->name('orders.getProductDiscount');
         Route::resource('shipping_addresses', "ShippingAddressController");
         Route::resource('billing_addresses', "BillingAddressController");

@@ -12,7 +12,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('admin.sliders.index') }}" class="nav-link {{ set_active('admin.dashboard.index') }}">
+            <a href="{{ route('admin.sliders.index') }}" class="nav-link {{ set_active('admin.sliders.index') }}">
                 <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
                 <span class="text">Slider Management</span>
             </a>
@@ -21,6 +21,12 @@
             <a href="{{ route('orders.index') }}" class="nav-link {{ set_active('orders.index') }}">
                 <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
                 <span class="text">Orders Management</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.chefs.index') }}" class="nav-link {{ set_active('admin.chefs.index') }}">
+                <span class="icon"><i class="fas fa-tachometer-alt"></i></span>
+                <span class="text">Chefs</span>
             </a>
         </li>
         <li class="nav-item dropdown">

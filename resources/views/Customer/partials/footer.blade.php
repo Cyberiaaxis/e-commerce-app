@@ -12,7 +12,12 @@
         </div>
         <div class="col-lg-4">
             <div class="logo">
-                <a href="/"><img src="{{ asset('images/white-logo.png') }}" alt=""></a>
+                <a href="/">
+                    <img src="{{ asset('images/logo.png') }}"
+                        style="width: 80px; height: 80px;"
+                        alt="Daily Dose Cafe">
+                    <!-- <img src="{{ asset('images/logo.png') }}" alt=""> -->
+                </a>
             </div>
         </div>
         <div class="col-lg-4 col-xs-12">

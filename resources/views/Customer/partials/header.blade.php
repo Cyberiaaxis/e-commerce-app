@@ -4,7 +4,10 @@
             <nav class="main-nav">
                 <!-- ***** Logo Start ***** -->
                 <a href="/" class="logo">
-                    <img src=" {{ asset('images/klassy-logo.png') }}" align="klassy cafe html template">
+                    <img src="{{ asset('images/logo.png') }}"
+                        style="width: 80px; height: 80px;"
+                        alt="Daily Dose Cafe">
+
                 </a>
                 <!-- ***** Logo End ***** -->
                 <!-- ***** Menu Start ***** -->

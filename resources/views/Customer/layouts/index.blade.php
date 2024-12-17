@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <title>Klassy Cafe - Restaurant HTML Template</title>
+    <title>The Daily Dose Cafe</title>
     <!--
     
 TemplateMo 558 Klassy Cafe
@@ -28,7 +28,16 @@ https://templatemo.com/tm-558-klassy-cafe
     <link rel="stylesheet" href="{{ asset('css/owl-carousel.css') }}">
 
     <link rel="stylesheet" href="{{ asset('css/lightbox.css') }}">
-
+    <style>
+        .hover-scale:hover {
+            transform: scale(1.05);
+            /* Slightly enlarge the image */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            /* Add shadow effect */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            /* Smooth transition */
+        }
+    </style>
 </head>
 
 <body>
@@ -55,7 +64,7 @@ https://templatemo.com/tm-558-klassy-cafe
                 <div class="col-lg-4">
                     <div class="left-content">
                         <div class="inner-content">
-                            <h4>Daily Dose Cafe</h4>
+                            <h4>The Daily Dose Cafe</h4>
                             <h6>THE BEST EXPERIENCE</h6>
                             <div class="main-white-button scroll-to-section">
                                 <a href="#reservation">Make A Reservation</a>
@@ -66,27 +75,13 @@ https://templatemo.com/tm-558-klassy-cafe
                 <div class="col-lg-8">
                     <div class="main-banner header-text">
                         <div class="Modern-Slider">
-                            <!-- Item -->
+                            @foreach($sliders as $slider)
                             <div class="item">
                                 <div class="img-fill">
-                                    <img src="{{ asset('images/slide-01.jpg') }}" alt="">
+                                    <img src="{{ asset( $slider->image_path) }}" alt="{{ $slider->title }}">
                                 </div>
                             </div>
-                            <!-- // Item -->
-                            <!-- Item -->
-                            <div class="item">
-                                <div class="img-fill">
-                                    <img src="{{ asset('images/slide-02.jpg') }}" alt="">
-                                </div>
-                            </div>
-                            <!-- // Item -->
-                            <!-- Item -->
-                            <div class="item">
-                                <div class="img-fill">
-                                    <img src="{{ asset('images/slide-03.jpg') }}" alt="">
-                                </div>
-                            </div>
-                            <!-- // Item -->
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -105,18 +100,22 @@ https://templatemo.com/tm-558-klassy-cafe
                             <h6>About Us</h6>
                             <h2>We Leave A Delicious Memory For You</h2>
                         </div>
-                        <p>Klassy Cafe is one of the best <a href="https://templatemo.com/tag/restaurant" target="_blank" rel="sponsored">restaurant HTML templates</a> with Bootstrap v4.5.2 CSS framework. You can download and feel free to use this website template layout for your restaurant business. You are allowed to use this template for commercial purposes. <br><br>You are NOT allowed to redistribute the template ZIP file on any template donwnload website. Please contact us for more information.</p>
-                        <div class="row">
+                        <p>The Daily Dose Cafe is one of the best
+                            <a href="https://dailydosecafe.com" target="_blank" rel="sponsored">restaurant</a>
+                        </p>
+
+                        <div class="row border rounded shadow p-5 bg-light">
+                            @foreach($topOrderedProducts as $topOrderedProduct)
                             <div class="col-4">
-                                <img src="{{ asset('images/about-thumb-01.jpg') }}" alt="">
+                                <div class="ratio ratio-4x3">
+                                    <img src="{{ asset('storage/images/' . $topOrderedProduct['image']) }}" alt="" class="img-fluid border rounded shadow transition hover-scale">
+                                </div>
                             </div>
-                            <div class="col-4">
-                                <img src="{{ asset('images/about-thumb-02.jpg') }}" alt="">
-                            </div>
-                            <div class="col-4">
-                                <img src="{{ asset('images/about-thumb-03.jpg') }}" alt="">
-                            </div>
+                            @endforeach
                         </div>
+
+
+
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-xs-12">
@@ -139,101 +138,32 @@ https://templatemo.com/tm-558-klassy-cafe
                 <div class="col-lg-4">
                     <div class="section-heading">
                         <h6>Our Menu</h6>
-                        <h2>Our selection of cakes with quality taste</h2>
+                        <h2>Our selection with quality taste</h2>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="menu-item-carousel">
-            <div class="col-lg-12">
-                <div class="owl-menu-item owl-carousel">
-                    <div class="item">
-                        <div class='card card1'>
-                            <div class="price">
-                                <h6>$14</h6>
-                            </div>
-                            <div class='info'>
-                                <h1 class='title'>Chocolate Cake</h1>
-                                <p class='description'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sedii do eiusmod teme.</p>
-                                <div class="main-text-button">
-                                    <div class="scroll-to-section"><a href="#reservation">Make Reservation <i class="fa fa-angle-down"></i></a></div>
-                                </div>
-                            </div>
-                        </div>
+        <div class="owl-menu-item owl-carousel">
+            @foreach($products as $product)
+            <div class="item">
+                <div class="card card3" style="background-image: url('{{ asset('storage/images/' . $product->image) }}');">
+                    <div class="price">
+                        <h6>${{ number_format($product->price, 2) }}</h6>
                     </div>
-                    <div class="item">
-                        <div class='card card2'>
-                            <div class="price">
-                                <h6>$22</h6>
-                            </div>
-                            <div class='info'>
-                                <h1 class='title'>Klassy Pancake</h1>
-                                <p class='description'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sedii do eiusmod teme.</p>
-                                <div class="main-text-button">
-                                    <div class="scroll-to-section"><a href="#reservation">Make Reservation <i class="fa fa-angle-down"></i></a></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class='card card3'>
-                            <div class="price">
-                                <h6>$18</h6>
-                            </div>
-                            <div class='info'>
-                                <h1 class='title'>Tall Klassy Bread</h1>
-                                <p class='description'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sedii do eiusmod teme.</p>
-                                <div class="main-text-button">
-                                    <div class="scroll-to-section"><a href="#reservation">Make Reservation <i class="fa fa-angle-down"></i></a></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class='card card4'>
-                            <div class="price">
-                                <h6>$10</h6>
-                            </div>
-                            <div class='info'>
-                                <h1 class='title'>Blueberry CheeseCake</h1>
-                                <p class='description'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sedii do eiusmod teme.</p>
-                                <div class="main-text-button">
-                                    <div class="scroll-to-section"><a href="#reservation">Make Reservation <i class="fa fa-angle-down"></i></a></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class='card card5'>
-                            <div class="price">
-                                <h6>$8.50</h6>
-                            </div>
-                            <div class='info'>
-                                <h1 class='title'>Klassy Cup Cake</h1>
-                                <p class='description'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sedii do eiusmod teme.</p>
-                                <div class="main-text-button">
-                                    <div class="scroll-to-section"><a href="#reservation">Make Reservation <i class="fa fa-angle-down"></i></a></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class='card card3'>
-                            <div class="price">
-                                <h6>$7.25</h6>
-                            </div>
-                            <div class='info'>
-                                <h1 class='title'>Klassic Cake</h1>
-                                <p class='description'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sedii do eiusmod teme.</p>
-                                <div class="main-text-button">
-                                    <div class="scroll-to-section"><a href="#reservation">Make Reservation <i class="fa fa-angle-down"></i></a></div>
-                                </div>
+                    <div class="info">
+                        <h1 class="title">{{ $product->name }}</h1>
+                        <p class="description">{{ $product->description }}</p>
+                        <div class="main-text-button">
+                            <div class="scroll-to-section">
+                                <a href="#reservation">Make Reservation <i class="fa fa-angle-down"></i></a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            @endforeach
         </div>
+
     </section>
     <!-- ***** Menu Area Ends ***** -->
 
@@ -249,6 +179,7 @@ https://templatemo.com/tm-558-klassy-cafe
                 </div>
             </div>
             <div class="row">
+                @foreach ($chefs as $chef)
                 <div class="col-lg-4">
                     <div class="chef-item">
                         <div class="thumb">
@@ -258,48 +189,16 @@ https://templatemo.com/tm-558-klassy-cafe
                                 <li><a href="#"><i class="fa fa-twitter"></i></a></li>
                                 <li><a href="#"><i class="fa fa-instagram"></i></a></li>
                             </ul>
-                            <img src="{{ asset('images/chefs-01.jpg') }}" alt="Chef #1">
+                            <img src="{{ asset('storage/' . $chef->image) }}" alt="{{ $chef->name }}">
                         </div>
                         <div class="down-content">
-                            <h4>Randy Walker</h4>
-                            <span>Pastry Chef</span>
+                            <h4>{{ $chef->name }}</h4>
+                            <span>{{ $chef->specialty }}</span>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4">
-                    <div class="chef-item">
-                        <div class="thumb">
-                            <div class="overlay"></div>
-                            <ul class="social-icons">
-                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fa fa-behance"></i></a></li>
-                            </ul>
-                            <img src="{{ asset('images/chefs-02.jpg') }}" alt="Chef #2">
-                        </div>
-                        <div class="down-content">
-                            <h4>David Martin</h4>
-                            <span>Cookie Chef</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="chef-item">
-                        <div class="thumb">
-                            <div class="overlay"></div>
-                            <ul class="social-icons">
-                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fa fa-google"></i></a></li>
-                            </ul>
-                            <img src="{{ asset('images/chefs-03.jpg') }}" alt="Chef #3">
-                        </div>
-                        <div class="down-content">
-                            <h4>Peter Perkson</h4>
-                            <span>Pancake Chef</span>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
+
             </div>
         </div>
     </section>
@@ -315,20 +214,20 @@ https://templatemo.com/tm-558-klassy-cafe
                             <h6>Contact Us</h6>
                             <h2>Here You Can Make A Reservation Or Just walkin to our cafe</h2>
                         </div>
-                        <p>Donec pretium est orci, non vulputate arcu hendrerit a. Fusce a eleifend riqsie, namei sollicitudin urna diam, sed commodo purus porta ut.</p>
+
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="phone">
                                     <i class="fa fa-phone"></i>
                                     <h4>Phone Numbers</h4>
-                                    <span><a href="#">080-090-0990</a><br><a href="#">080-090-0880</a></span>
+                                    <span><a href="#">+91-9873251605</a><br><a href="#">+91-9354447905</a></span>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="message">
                                     <i class="fa fa-envelope"></i>
                                     <h4>Emails</h4>
-                                    <span><a href="#">hello@company.com</a><br><a href="#">info@company.com</a></span>
+                                    <span><a href="#">dailydose.vrs@gmail.com</a></span>
                                 </div>
                             </div>
                         </div>
@@ -336,14 +235,25 @@ https://templatemo.com/tm-558-klassy-cafe
                 </div>
                 <div class="col-lg-6">
                     <div class="contact-form">
-                        <form id="contact" action="" method="post">
+                        @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                        @endif
+                        @if (session('error'))
+                        <div class="alert alert-success">
+                            {{ session('error') }}
+                        </div>
+                        @endif
+                        <form id="contact" action="{{ route('reservations.store') }}" method="post">
+                            @csrf <!-- CSRF token for security -->
                             <div class="row">
                                 <div class="col-lg-12">
                                     <h4>Table Reservation</h4>
                                 </div>
                                 <div class="col-lg-6 col-sm-12">
                                     <fieldset>
-                                        <input name="name" type="text" id="name" placeholder="Your Name*" required="">
+                                        <input name="name" type="text" id="name" placeholder="Your Name*" required>
                                     </fieldset>
                                 </div>
                                 <div class="col-lg-6 col-sm-12">
@@ -356,22 +266,32 @@ https://templatemo.com/tm-558-klassy-cafe
                                         <input name="phone" type="text" id="phone" placeholder="Phone Number*" required="">
                                     </fieldset>
                                 </div>
+                                <!-- Table Number Dropdown -->
+                                <div class="col-lg-6 col-sm-12">
+                                    <fieldset>
+                                        @php
+                                        $tableNumbers = range(1, 10); // Creates an array [1, 2, ..., 10]
+                                        @endphp
+
+                                        <select name="table_number" id="table_number" required>
+                                            <option value="" disabled selected>Select Table Number</option>
+                                            @foreach ($tableNumbers as $number)
+                                            <option value="{{ $number }}">Table {{ $number }}</option>
+                                            @endforeach
+                                        </select>
+                                    </fieldset>
+                                </div>
                                 <div class="col-md-6 col-sm-12">
                                     <fieldset>
-                                        <select value="number-guests" name="number-guests" id="number-guests">
-                                            <option value="number-guests">Number Of Guests</option>
-                                            <option name="1" id="1">1</option>
-                                            <option name="2" id="2">2</option>
-                                            <option name="3" id="3">3</option>
-                                            <option name="4" id="4">4</option>
-                                            <option name="5" id="5">5</option>
-                                            <option name="6" id="6">6</option>
-                                            <option name="7" id="7">7</option>
-                                            <option name="8" id="8">8</option>
-                                            <option name="9" id="9">9</option>
-                                            <option name="10" id="10">10</option>
-                                            <option name="11" id="11">11</option>
-                                            <option name="12" id="12">12</option>
+                                        @php
+                                        $guestNumbers = range(1, 12); // Creates an array [1, 2, ..., 12]
+                                        @endphp
+
+                                        <select name="number_guests" id="number-guests" required>
+                                            <option value="" disabled selected>Number Of Guests</option>
+                                            @foreach ($guestNumbers as $number)
+                                            <option value="{{ $number }}">{{ $number }}</option>
+                                            @endforeach
                                         </select>
                                     </fieldset>
                                 </div>
@@ -407,6 +327,7 @@ https://templatemo.com/tm-558-klassy-cafe
                                 </div>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -420,7 +341,7 @@ https://templatemo.com/tm-558-klassy-cafe
             <div class="row">
                 <div class="col-lg-4 offset-lg-4 text-center">
                     <div class="section-heading">
-                        <h6>Klassy Week</h6>
+                        <h6>The Daily Dose Cafe Week</h6>
                         <h2>This Week’s Special Meal Offers</h2>
                     </div>
                 </div>
