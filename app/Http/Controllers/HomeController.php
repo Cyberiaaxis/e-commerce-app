@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Chef;
 use App\Models\Customer;
 use App\Models\Product;
@@ -33,13 +34,35 @@ class HomeController extends Controller
             ->limit(3)
             ->get();
 
+        // $categories = Category::with(['products' => function ($query) {
+        //     $query->where('is_active', 1); // Only active products
+        // }])->get();
+
+        $categories = Category::with(['products' => function ($query) {
+            $query->where('is_active', 1) // Only active products
+                ->whereHas('discounts', function ($discountQuery) {
+                    $discountQuery->where('is_active', true) // Only active discounts
+                        ->where(function ($dateQuery) {
+                            $dateQuery->whereNull('start_date')
+                                ->orWhere('start_date', '<=', now()); // Check if start date is passed or null
+                        })
+                        ->where(function ($dateQuery) {
+                            $dateQuery->whereNull('end_date')
+                                ->orWhere('end_date', '>=', now()); // Check if end date is not expired or null
+                        });
+                });
+        }])->get();
+
+        // dd($categories);
+        // dd($categories);
         // Pass data to the view with descriptive variable names
         return view('Customer.layouts.index', [
             'sliders' => $sliders,
             'products' => $products,
             'customers' => $customers,
             'topOrderedProducts' => $topOrderedProducts,
-            'chefs' => $chefs
+            'chefs' => $chefs,
+            'categories' => $categories
         ]);
     }
 }

@@ -37,6 +37,23 @@ https://templatemo.com/tm-558-klassy-cafe
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             /* Smooth transition */
         }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
@@ -147,6 +164,7 @@ https://templatemo.com/tm-558-klassy-cafe
             @foreach($products as $product)
             <div class="item">
                 <div class="card card3" style="background-image: url('{{ asset('storage/images/' . $product->image) }}');">
+
                     <div class="price">
                         <h6>${{ number_format($product->price, 2) }}</h6>
                     </div>
@@ -336,269 +354,105 @@ https://templatemo.com/tm-558-klassy-cafe
     <!-- ***** Reservation Area Ends ***** -->
 
     <!-- ***** Menu Area Starts ***** -->
-    <section class="section" id="offers">
+    <section class="section bg-light" id="offers">
         <div class="container">
+            <!-- Section Heading -->
             <div class="row">
                 <div class="col-lg-4 offset-lg-4 text-center">
-                    <div class="section-heading">
-                        <h6>The Daily Dose Cafe Week</h6>
-                        <h2>This Week’s Special Meal Offers</h2>
+                    <div class="section-heading mb-5">
+                        <h6 class="text-uppercase text-primary">The Daily Dose Cafe Week</h6>
+                        <h2 class="fw-bold">This Week’s Special Meal Offers</h2>
                     </div>
                 </div>
             </div>
+            <!-- Tabs -->
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="row" id="tabs">
-                        <div class="col-lg-12">
-                            <div class="heading-tabs">
-                                <div class="row">
-                                    <div class="col-lg-6 offset-lg-3">
-                                        <ul>
-                                            <li><a href='#tabs-1'><img src="{{ asset('images/tab-icon-01.png') }}" alt="">Breakfast</a></li>
-                                            <li><a href='#tabs-2'><img src="{{ asset('images/tab-icon-02.png') }}" alt="">Lunch</a></a></li>
-                                            <li><a href='#tabs-3'><img src="{{ asset('images/tab-icon-03.png') }}" alt="">Dinner</a></a></li>
-                                        </ul>
+                <div id="tabs">
+                    <!-- Centered Tabs Navigation -->
+                    <div class="d-flex justify-content-center mb-4">
+                        <ul class="list-inline nav nav-tabs" id="tabMenu">
+                            @foreach($categories as $category)
+                            <li class="list-inline-item mx-2">
+                                <a href='#tabs-{{ $category->id }}'
+                                    class="nav-link text-decoration-none px-4 py-2 border rounded-pill shadow-sm bg-light">
+                                    {{ $category->category_name }}
+                                </a>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <!-- Tabs Content -->
+                    <section class="tab-content">
+                        @foreach($categories as $category)
+                        <article id='tabs-{{$category->id}}' class="tab-pane fade show">
+                            <div class="row gy-4">
+                                <!-- Left List -->
+                                <div class="col-lg-6">
+                                    <div>
+                                        @foreach($category->products->take(ceil($category->products->count() / 2)) as $product)
+                                        <div class="tab-item d-flex align-items-center p-3 border rounded shadow-sm bg-white">
+                                            <!-- Image Section -->
+                                            <div class="tab-item-image me-3">
+                                                <img src="{{ asset('storage/images/' . $product->image) }}"
+                                                    alt="{{ $product->name }}"
+                                                    class="img-fluid rounded-circle shadow"
+                                                    style="width: 80px; height: 80px; object-fit: cover;">
+                                            </div>
+                                            <!-- Text Details Section -->
+                                            <div class="tab-item-details flex-grow-1">
+                                                <h4 class="mb-1 fw-bold text-dark">{{ $product->name }}</h4>
+                                                <p class="mb-1 text-muted small">{{ $product->description }}</p>
+                                            </div>
+                                            <!-- Price Section -->
+                                            <div class="tab-item-price text-end">
+                                                <div class="price-circle d-inline-block p-3 text-center shadow-sm rounded-circle"
+                                                    style="background-color: #28a745; animation: pulse 1s infinite;">
+                                                    <h6 class="text-white fw-bold">${{ $product->price }}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
                                     </div>
                                 </div>
+                                <!-- Right List -->
+                                <div class="col-lg-6">
+                                    @foreach($category->products->skip(ceil($category->products->count() / 2)) as $product)
+                                    <div class="tab-item d-flex align-items-center p-3 border rounded shadow-sm bg-white">
+                                        <!-- Image Section -->
+                                        <div class="tab-item-image me-3">
+                                            <img src="{{ asset('storage/images/' . $product->image) }}"
+                                                alt="{{ $product->name }}"
+                                                class="img-fluid rounded-circle shadow"
+                                                style="width: 80px; height: 80px; object-fit: cover;">
+                                        </div>
+                                        <!-- Text Details Section -->
+                                        <div class="tab-item-details flex-grow-1">
+                                            <h4 class="mb-1 fw-bold text-dark">{{ $product->name }}</h4>
+                                            <p class="mb-1 text-muted small">{{ $product->description }}</p>
+                                        </div>
+                                        <!-- Price Section -->
+                                        <div class="tab-item-price text-end">
+                                            <div class="price-circle d-inline-block p-3 text-center shadow-sm rounded-circle"
+                                                style="background-color: #28a745; animation: pulse 1s infinite;">
+                                                <h6 class="text-white fw-bold">${{ $product->price }}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <section class='tabs-content'>
-                                <article id='tabs-1'>
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="row">
-                                                <div class="left-list">
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-01.png') }}" alt="">
-                                                            <h4>Fresh Chicken Salad</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$10.50</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-02.png') }}" alt="">
-                                                            <h4>Orange Juice</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$8.50</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-03.png') }}" alt="">
-                                                            <h4>Fruit Salad</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$9.90</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="row">
-                                                <div class="right-list">
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-04.png') }}" alt="">
-                                                            <h4>Eggs Omelette</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$6.50</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-04.png') }}" alt="">
-                                                            <h4>Dollma Pire</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$5.00</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-05.png') }}" alt="">
-                                                            <h4>Omelette & Cheese</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$4.10</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                                <article id='tabs-2'>
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="row">
-                                                <div class="left-list">
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-04.png') }}" alt="">
-                                                            <h4>Eggs Omelette</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$14</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-05.png') }}" alt="">
-                                                            <h4>Dollma Pire</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$18</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-06.png') }}" alt="">
-                                                            <h4>Omelette & Cheese</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$22</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="row">
-                                                <div class="right-list">
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-01.png') }}" alt="">
-                                                            <h4>Fresh Chicken Salad</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$10</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-02.png') }}" alt="">
-                                                            <h4>Orange Juice</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$20</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-03.png') }}" alt="">
-                                                            <h4>Fruit Salad</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$30</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                                <article id='tabs-3'>
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="row">
-                                                <div class="left-list">
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-05.png') }}" alt="">
-                                                            <h4>Eggs Omelette</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$14</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-03.png') }}" alt="">
-                                                            <h4>Orange Juice</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$18</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-02.png') }}" alt="">
-                                                            <h4>Fruit Salad</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$10</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="row">
-                                                <div class="right-list">
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-06.png') }}" alt="">
-                                                            <h4>Fresh Chicken Salad</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$8.50</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-01.png') }}" alt="">
-                                                            <h4>Dollma Pire</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$9</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="tab-item">
-                                                            <img src="{{ asset('images/tab-item-04.png') }}" alt="">
-                                                            <h4>Omelette & Cheese</h4>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                            <div class="price">
-                                                                <h6>$11</h6>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                            </section>
-                        </div>
-                    </div>
+                        </article>
+                        @endforeach
+                    </section>
                 </div>
             </div>
         </div>
     </section>
+
+
+
+
+
     <!-- ***** Chefs Area Ends ***** -->
 
     <!-- ***** Footer Start ***** -->
